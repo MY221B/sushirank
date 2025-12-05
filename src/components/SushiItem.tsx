@@ -20,7 +20,8 @@ export function SushiItem({
   const [imgError, setImgError] = useState(false);
   
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData('text/plain', dish.id);
+    e.dataTransfer.setData('dishId', dish.id);
+    e.dataTransfer.effectAllowed = 'move';
     onDragStart?.(e, dish);
   };
 
