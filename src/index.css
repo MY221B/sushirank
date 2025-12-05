@@ -161,7 +161,7 @@
 }
 
 .animate-conveyor {
-  animation: conveyor-scroll 60s linear infinite;
+  animation: conveyor-scroll 120s linear infinite;
 }
 
 .animate-conveyor:hover,
