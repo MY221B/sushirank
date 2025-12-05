@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Dish, TierId } from "@/types/sushi";
 import { initialDishes, tierData } from "@/data/initialDishes";
 import { TierRow } from "@/components/TierRow";
@@ -7,7 +7,7 @@ import { ListView } from "@/components/ListView";
 import { AddDishModal } from "@/components/AddDishModal";
 import { DragPreview } from "@/components/DragPreview";
 import { useTouchDrag } from "@/hooks/useTouchDrag";
-import { Plus, List, RotateCcw } from "lucide-react";
+import { Plus, List, RotateCcw, Search, X } from "lucide-react";
 
 type TierItems = Record<TierId, Dish[]>;
 
@@ -21,6 +21,14 @@ const Index = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [dragOverTier, setDragOverTier] = useState<TierId | null>(null);
   const [draggingFrom, setDraggingFrom] = useState<'pool' | TierId | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // 过滤后的菜品池
+  const filteredPoolDishes = useMemo(() => {
+    if (!searchQuery.trim()) return poolDishes;
+    const query = searchQuery.toLowerCase();
+    return poolDishes.filter(dish => dish.name.toLowerCase().includes(query));
+  }, [poolDishes, searchQuery]);
 
   // 处理触摸拖拽放下
   const handleTouchDrop = useCallback((dish: Dish, source: 'pool' | string, targetTierId: string | null) => {
@@ -161,51 +169,80 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Control Buttons */}
-        <div className="flex justify-end gap-2 sm:gap-3 mb-4 flex-wrap">
-          <button 
-            onClick={handleReset}
-            className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-          >
-            <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
-            重置
-          </button>
-          <button 
-            onClick={() => setAddModalOpen(true)}
-            className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-          >
-            <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-            新增
-          </button>
-          <button 
-            onClick={() => setIsListView(!isListView)}
-            className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-          >
-            <List className="w-3 h-3 sm:w-4 sm:h-4" />
-            {isListView ? '传送带' : '列表'}
-          </button>
+        {/* Search and Control Buttons */}
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 mb-4">
+          {/* Search Input */}
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="搜索菜品..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-8 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded"
+              >
+                <X className="w-3 h-3 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-2 sm:gap-3 flex-wrap justify-end">
+            <button 
+              onClick={handleReset}
+              className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+            >
+              <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
+              重置
+            </button>
+            <button 
+              onClick={() => setAddModalOpen(true)}
+              className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+            >
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+              新增
+            </button>
+            <button 
+              onClick={() => setIsListView(!isListView)}
+              className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+            >
+              <List className="w-3 h-3 sm:w-4 sm:h-4" />
+              {isListView ? '传送带' : '列表'}
+            </button>
+          </div>
         </div>
 
         {/* Dish Pool */}
         <section className="bg-secondary/50 border-t border-border rounded-lg overflow-hidden animate-fade-in">
-          <div>
-            {isListView ? (
-              <ListView 
-                dishes={poolDishes}
-                onDragStart={(e, dish) => handleDragStart(e, dish, 'pool')}
-                onTouchStart={handleTouchStart}
-              />
-            ) : (
-              <ConveyorBelt
-                dishes={poolDishes}
-                onDragStart={(e, dish) => handleDragStart(e, dish, 'pool')}
-                onTouchStart={handleTouchStart}
-                isPaused={isConveyorPaused || touchState.isDragging}
-                onMouseEnter={() => setIsConveyorPaused(true)}
-                onMouseLeave={() => !draggingFrom && setIsConveyorPaused(false)}
-              />
-            )}
-          </div>
+          {filteredPoolDishes.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground">
+              {searchQuery ? `没有找到 "${searchQuery}" 相关的菜品` : '菜品池为空'}
+            </div>
+          ) : (
+            <div>
+              {isListView ? (
+                <ListView 
+                  dishes={filteredPoolDishes}
+                  onDragStart={(e, dish) => handleDragStart(e, dish, 'pool')}
+                  onTouchStart={handleTouchStart}
+                />
+              ) : (
+                <ConveyorBelt
+                  dishes={filteredPoolDishes}
+                  onDragStart={(e, dish) => handleDragStart(e, dish, 'pool')}
+                  onTouchStart={handleTouchStart}
+                  isPaused={isConveyorPaused || touchState.isDragging || !!searchQuery}
+                  onMouseEnter={() => setIsConveyorPaused(true)}
+                  onMouseLeave={() => !draggingFrom && setIsConveyorPaused(false)}
+                />
+              )}
+            </div>
+          )}
         </section>
       </main>
 
