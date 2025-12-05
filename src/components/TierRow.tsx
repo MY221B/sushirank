@@ -10,6 +10,7 @@ interface TierRowProps {
   onDragOver: (e: React.DragEvent) => void;
   onItemClick: (dish: Dish) => void;
   onItemDragStart: (e: React.DragEvent, dish: Dish) => void;
+  onTouchStart?: (dish: Dish, source: string) => (e: React.TouchEvent) => void;
   isDragOver?: boolean;
 }
 
@@ -29,23 +30,28 @@ export function TierRow({
   onDragOver, 
   onItemClick,
   onItemDragStart,
+  onTouchStart,
   isDragOver 
 }: TierRowProps) {
   return (
-    <div className="flex border-b-2 border-foreground/90 min-h-[90px]">
+    <div 
+      className="flex border-b-2 border-foreground/90 min-h-[70px] sm:min-h-[90px]"
+      data-tier-id={tierId}
+    >
       <div 
         className={cn(
-          "w-28 flex-shrink-0 flex items-center justify-center border-r-2 border-foreground/90",
+          "w-16 sm:w-28 flex-shrink-0 flex items-center justify-center border-r-2 border-foreground/90",
           tierColors[tierId]
         )}
       >
-        <h2 className="text-2xl font-bold">{tierName}</h2>
+        <h2 className="text-lg sm:text-2xl font-bold">{tierName}</h2>
       </div>
       <div 
         className={cn(
-          "flex-grow p-2 flex flex-wrap gap-2 content-start transition-colors duration-200",
+          "flex-grow p-1.5 sm:p-2 flex flex-wrap gap-1 sm:gap-2 content-start transition-colors duration-200",
           isDragOver && "bg-primary/10"
         )}
+        data-tier-id={tierId}
         onDrop={(e) => onDrop(e, tierId)}
         onDragOver={onDragOver}
       >
@@ -56,6 +62,7 @@ export function TierRow({
             variant="tier"
             onClick={() => onItemClick(dish)}
             onDragStart={onItemDragStart}
+            onTouchStart={onTouchStart ? onTouchStart(dish, tierId) : undefined}
           />
         ))}
       </div>

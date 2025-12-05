@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 interface ConveyorBeltProps {
   dishes: Dish[];
   onDragStart: (e: React.DragEvent, dish: Dish) => void;
+  onTouchStart?: (dish: Dish, source: string) => (e: React.TouchEvent) => void;
   isPaused: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -14,6 +15,7 @@ interface ConveyorBeltProps {
 export function ConveyorBelt({ 
   dishes, 
   onDragStart, 
+  onTouchStart,
   isPaused,
   onMouseEnter,
   onMouseLeave
@@ -23,9 +25,8 @@ export function ConveyorBelt({
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  // 处理传送带拖拽滚动
+  // 处理传送带拖拽滚动（鼠标）
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    // 如果点击的是寿司项，不触发拖拽滚动
     if ((e.target as HTMLElement).closest('[draggable="true"]')) {
       return;
     }
@@ -39,7 +40,7 @@ export function ConveyorBelt({
     if (!isDragging || !containerRef.current) return;
     e.preventDefault();
     const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // 滚动速度倍数
+    const walk = (x - startX) * 2;
     containerRef.current.scrollLeft = scrollLeft - walk;
   }, [isDragging, startX, scrollLeft]);
 
@@ -52,16 +53,42 @@ export function ConveyorBelt({
     onMouseLeave();
   }, [onMouseLeave]);
 
+  // 处理触摸滚动
+  const handleTouchStartScroll = useCallback((e: React.TouchEvent) => {
+    // 如果触摸的是菜品，让菜品的 touch handler 处理
+    if ((e.target as HTMLElement).closest('[draggable="true"]')) {
+      return;
+    }
+    
+    const touch = e.touches[0];
+    setIsDragging(true);
+    setStartX(touch.pageX - (containerRef.current?.offsetLeft || 0));
+    setScrollLeft(containerRef.current?.scrollLeft || 0);
+  }, []);
+
+  const handleTouchMoveScroll = useCallback((e: React.TouchEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    
+    const touch = e.touches[0];
+    const x = touch.pageX - containerRef.current.offsetLeft;
+    const walk = (x - startX) * 2;
+    containerRef.current.scrollLeft = scrollLeft - walk;
+  }, [isDragging, startX, scrollLeft]);
+
+  const handleTouchEndScroll = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
   return (
     <div className="relative">
       {/* Top wood rail */}
-      <div className="h-5 wood-rail" />
+      <div className="h-3 sm:h-5 wood-rail" />
       
-      {/* Belt - 使用 overflow-x-auto 支持手动滚动 */}
+      {/* Belt */}
       <div 
         ref={containerRef}
         className={cn(
-          "h-40 belt-pattern overflow-x-auto cursor-grab scrollbar-hide",
+          "h-28 sm:h-40 belt-pattern overflow-x-auto cursor-grab scrollbar-hide",
           isDragging && "cursor-grabbing"
         )}
         onMouseEnter={onMouseEnter}
@@ -69,10 +96,13 @@ export function ConveyorBelt({
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onTouchStart={handleTouchStartScroll}
+        onTouchMove={handleTouchMoveScroll}
+        onTouchEnd={handleTouchEndScroll}
       >
         <div 
           className={cn(
-            "flex h-full",
+            "flex h-full items-center",
             !isDragging && "animate-conveyor",
             (isPaused || isDragging) && "paused"
           )}
@@ -84,13 +114,14 @@ export function ConveyorBelt({
               dish={dish}
               variant="belt"
               onDragStart={onDragStart}
+              onTouchStart={onTouchStart ? onTouchStart(dish, 'pool') : undefined}
             />
           ))}
         </div>
       </div>
       
       {/* Bottom wood rail */}
-      <div className="h-5 wood-rail" />
+      <div className="h-3 sm:h-5 wood-rail" />
     </div>
   );
 }
