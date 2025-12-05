@@ -29,6 +29,7 @@ export function useTouchDrag(
   const dragPreviewRef = useRef<HTMLDivElement>(null);
 
   const handleTouchStart = useCallback((dish: Dish, source: 'pool' | string) => (e: React.TouchEvent) => {
+    e.preventDefault();
     const touch = e.touches[0];
     setState({
       isDragging: true,
@@ -41,6 +42,7 @@ export function useTouchDrag(
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (!state.isDragging) return;
     
+    e.preventDefault();
     const touch = e.touches[0];
     setState(prev => ({
       ...prev,
