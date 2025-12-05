@@ -133,35 +133,35 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Dish Pool */}
-        <section className="relative bg-secondary/50 border-t border-border rounded-lg overflow-hidden animate-fade-in">
-          {/* Buttons */}
-          <div className="absolute -top-4 right-6 z-10 flex gap-3">
-            <button 
-              onClick={handleReset}
-              className="wood-btn flex items-center gap-2"
-            >
-              <RotateCcw className="w-4 h-4" />
-              重置
-            </button>
-            <button 
-              onClick={() => setAddModalOpen(true)}
-              className="wood-btn flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              新增菜品
-            </button>
-            <button 
-              onClick={() => setIsListView(!isListView)}
-              className="wood-btn flex items-center gap-2"
-            >
-              <List className="w-4 h-4" />
-              {isListView ? '传送带' : '列表'}
-            </button>
-          </div>
+        {/* Control Buttons */}
+        <div className="flex justify-end gap-3 mb-4">
+          <button 
+            onClick={handleReset}
+            className="wood-btn flex items-center gap-2"
+          >
+            <RotateCcw className="w-4 h-4" />
+            重置
+          </button>
+          <button 
+            onClick={() => setAddModalOpen(true)}
+            className="wood-btn flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            新增菜品
+          </button>
+          <button 
+            onClick={() => setIsListView(!isListView)}
+            className="wood-btn flex items-center gap-2"
+          >
+            <List className="w-4 h-4" />
+            {isListView ? '传送带' : '列表'}
+          </button>
+        </div>
 
+        {/* Dish Pool */}
+        <section className="bg-secondary/50 border-t border-border rounded-lg overflow-hidden animate-fade-in">
           {/* Pool Content */}
-          <div className="pt-6">
+          <div>
             {isListView ? (
               <ListView 
                 dishes={poolDishes}

@@ -1,3 +1,4 @@
+import { useRef, useState, useCallback } from "react";
 import { Dish } from "@/types/sushi";
 import { SushiItem } from "./SushiItem";
 import { cn } from "@/lib/utils";
@@ -17,29 +18,67 @@ export function ConveyorBelt({
   onMouseEnter,
   onMouseLeave
 }: ConveyorBeltProps) {
-  // Duplicate dishes for seamless loop
-  const displayDishes = [...dishes, ...dishes];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  // 处理传送带拖拽滚动
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    // 如果点击的是寿司项，不触发拖拽滚动
+    if ((e.target as HTMLElement).closest('[draggable="true"]')) {
+      return;
+    }
+    
+    setIsDragging(true);
+    setStartX(e.pageX - (containerRef.current?.offsetLeft || 0));
+    setScrollLeft(containerRef.current?.scrollLeft || 0);
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - containerRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // 滚动速度倍数
+    containerRef.current.scrollLeft = scrollLeft - walk;
+  }, [isDragging, startX, scrollLeft]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const handleMouseLeaveContainer = useCallback(() => {
+    setIsDragging(false);
+    onMouseLeave();
+  }, [onMouseLeave]);
 
   return (
     <div className="relative">
       {/* Top wood rail */}
       <div className="h-5 wood-rail" />
       
-      {/* Belt */}
+      {/* Belt - 使用 overflow-x-auto 支持手动滚动 */}
       <div 
-        className="h-40 belt-pattern overflow-hidden cursor-grab active:cursor-grabbing"
+        ref={containerRef}
+        className={cn(
+          "h-40 belt-pattern overflow-x-auto cursor-grab scrollbar-hide",
+          isDragging && "cursor-grabbing"
+        )}
         onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+        onMouseLeave={handleMouseLeaveContainer}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
       >
         <div 
           className={cn(
             "flex h-full",
-            "animate-conveyor",
-            isPaused && "paused"
+            !isDragging && "animate-conveyor",
+            (isPaused || isDragging) && "paused"
           )}
           style={{ width: 'fit-content' }}
         >
-          {displayDishes.map((dish, index) => (
+          {dishes.map((dish, index) => (
             <SushiItem
               key={`${dish.id}-${index}`}
               dish={dish}
