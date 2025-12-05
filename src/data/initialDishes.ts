@@ -1,6 +1,6 @@
 import { Dish, TierData } from "@/types/sushi";
 
-// 原有图片
+// 第一批图片
 import bainiaobei from "@/assets/dishes/白鸟贝.jpg";
 import angusSteak from "@/assets/dishes/安格斯牛排配香鹅肝.jpg";
 import bazhuayu from "@/assets/dishes/八爪鱼.jpg";
@@ -8,7 +8,7 @@ import xuexierou from "@/assets/dishes/爆盛雪蟹肉海苔包.jpg";
 import beijibei from "@/assets/dishes/北极贝.jpg";
 import xiaobeizhu from "@/assets/dishes/爆盛小贝柱海苔包.jpg";
 
-// 新增图片
+// 第二批图片
 import dahailuo from "@/assets/dishes/大海螺.jpg";
 import bimuyu from "@/assets/dishes/比目鱼.jpg";
 import dieyuqunbian from "@/assets/dishes/鲽鱼裙边.jpg";
@@ -19,6 +19,18 @@ import feiyuzidoufupi from "@/assets/dishes/飞鱼子豆腐皮寿司.jpg";
 import chixia from "@/assets/dishes/赤虾.jpg";
 import conghuajinqiangyujunjian from "@/assets/dishes/葱花金枪鱼军舰.jpg";
 import daqiechangqijinqiangyunan from "@/assets/dishes/大切长鳍金枪鱼腩芝麻酱油.webp";
+
+// 第三批图片
+import haiman from "@/assets/dishes/海鳗.jpg";
+import huazhilian from "@/assets/dishes/花之恋.jpg";
+import hongganyu from "@/assets/dishes/红甘鱼.jpg";
+import haidanhaitaibao from "@/assets/dishes/海胆海苔包.jpg";
+import fupishousi from "@/assets/dishes/腐皮寿司.jpg";
+import haixianzicaijuan from "@/assets/dishes/海鲜紫菜卷.jpg";
+import heixiangbabang from "@/assets/dishes/黑象拔蚌.jpg";
+import hebuwuyouyu from "@/assets/dishes/和布芜拌鱿鱼.jpg";
+import feiyuzijunjian from "@/assets/dishes/飞鱼子军舰.jpg";
+import houqieshaoquyu from "@/assets/dishes/厚切烧鲭鱼.jpg";
 
 export const initialDishes: Dish[] = [
   { id: 'dish-0', name: "白鸟贝", image: bainiaobei },
@@ -37,6 +49,16 @@ export const initialDishes: Dish[] = [
   { id: 'dish-13', name: "赤虾", image: chixia },
   { id: 'dish-14', name: "葱花金枪鱼军舰", image: conghuajinqiangyujunjian },
   { id: 'dish-15', name: "大切长鳍金枪鱼腩芝麻酱油", image: daqiechangqijinqiangyunan },
+  { id: 'dish-16', name: "海鳗", image: haiman },
+  { id: 'dish-17', name: "花之恋", image: huazhilian },
+  { id: 'dish-18', name: "红甘鱼", image: hongganyu },
+  { id: 'dish-19', name: "海胆海苔包", image: haidanhaitaibao },
+  { id: 'dish-20', name: "腐皮寿司", image: fupishousi },
+  { id: 'dish-21', name: "海鲜紫菜卷", image: haixianzicaijuan },
+  { id: 'dish-22', name: "黑象拔蚌", image: heixiangbabang },
+  { id: 'dish-23', name: "和布芜拌鱿鱼秋葵军舰", image: hebuwuyouyu },
+  { id: 'dish-24', name: "飞鱼子军舰", image: feiyuzijunjian },
+  { id: 'dish-25', name: "厚切烧鲭鱼", image: houqieshaoquyu },
 ];
 
 export const tierData: TierData[] = [
