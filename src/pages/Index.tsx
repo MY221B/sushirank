@@ -7,7 +7,7 @@ import { ListView } from "@/components/ListView";
 import { AddDishModal } from "@/components/AddDishModal";
 import { DragPreview } from "@/components/DragPreview";
 import { useTouchDrag } from "@/hooks/useTouchDrag";
-import { Plus, List, RotateCcw, Search, X } from "lucide-react";
+import { Plus, List, Search, X } from "lucide-react";
 
 type TierItems = Record<TierId, Dish[]>;
 
@@ -121,14 +121,6 @@ const Index = () => {
     setPoolDishes(prev => [...prev, newDish]);
   }, []);
 
-  const handleReset = useCallback(() => {
-    const allDishes = [
-      ...poolDishes,
-      ...Object.values(tierItems).flat()
-    ];
-    setPoolDishes(allDishes);
-    setTierItems({ S: [], A: [], B: [], C: [], D: [] });
-  }, [poolDishes, tierItems]);
 
   return (
     <div 
@@ -193,13 +185,6 @@ const Index = () => {
 
           {/* Buttons */}
           <div className="flex gap-2 sm:gap-3 flex-wrap justify-end">
-            <button 
-              onClick={handleReset}
-              className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-            >
-              <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
-              重置
-            </button>
             <button 
               onClick={() => setAddModalOpen(true)}
               className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
