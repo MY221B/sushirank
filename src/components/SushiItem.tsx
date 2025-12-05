@@ -46,12 +46,18 @@ export function SushiItem({
         onTouchStart={handleTouchStart}
         onClick={onClick}
         className={cn(
-          "flex flex-col items-center p-1.5 sm:p-2.5 bg-card border border-border rounded-lg cursor-pointer",
+          "relative flex flex-col items-center p-1.5 sm:p-2.5 bg-card border border-border rounded-lg cursor-pointer",
           "hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95",
           "w-[72px] sm:w-28 animate-scale-in touch-manipulation",
           isDragging && "opacity-50 scale-105"
         )}
       >
+        {/* 新品角标 */}
+        {dish.newMonth && (
+          <div className="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
+            {dish.newMonth}月新品
+          </div>
+        )}
         <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 flex items-center justify-center">
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
@@ -78,11 +84,17 @@ export function SushiItem({
       onDragStart={handleDragStart}
       onTouchStart={handleTouchStart}
       className={cn(
-        "flex-shrink-0 flex flex-col items-center justify-center mx-2 sm:mx-3 cursor-grab active:cursor-grabbing",
+        "relative flex-shrink-0 flex flex-col items-center justify-center mx-2 sm:mx-3 cursor-grab active:cursor-grabbing",
         "w-28 sm:w-40 h-full py-2 touch-manipulation",
         isDragging && "opacity-50 scale-105"
       )}
     >
+      {/* 新品角标 */}
+      {dish.newMonth && (
+        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
+          {dish.newMonth}月新品
+        </div>
+      )}
       <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-1.5 sm:mb-2">
         {imgError ? (
           <span className="text-3xl sm:text-4xl">🍣</span>
