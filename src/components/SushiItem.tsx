@@ -46,15 +46,15 @@ export function SushiItem({
         onTouchStart={handleTouchStart}
         onClick={onClick}
         className={cn(
-          "flex flex-col items-center p-1 sm:p-2 bg-card border border-border rounded-lg cursor-pointer",
+          "flex flex-col items-center p-1.5 sm:p-2.5 bg-card border border-border rounded-lg cursor-pointer",
           "hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95",
-          "w-16 sm:w-24 animate-scale-in touch-manipulation",
+          "w-[72px] sm:w-28 animate-scale-in touch-manipulation",
           isDragging && "opacity-50 scale-105"
         )}
       >
-        <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-md overflow-hidden bg-muted mb-1 sm:mb-1.5 flex items-center justify-center">
+        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 flex items-center justify-center">
           {imgError ? (
-            <span className="text-lg sm:text-2xl">🍣</span>
+            <span className="text-xl sm:text-3xl">🍣</span>
           ) : (
             <img 
               src={dish.image} 
@@ -65,7 +65,7 @@ export function SushiItem({
             />
           )}
         </div>
-        <span className="text-[10px] sm:text-xs font-medium text-foreground text-center leading-tight line-clamp-2">
+        <span className="text-[11px] sm:text-sm font-medium text-foreground text-center leading-tight line-clamp-2">
           {dish.name}
         </span>
       </div>
@@ -78,14 +78,14 @@ export function SushiItem({
       onDragStart={handleDragStart}
       onTouchStart={handleTouchStart}
       className={cn(
-        "flex-shrink-0 flex flex-col items-center justify-center mx-1 sm:mx-2 cursor-grab active:cursor-grabbing",
-        "w-24 sm:w-36 h-full py-2 touch-manipulation",
+        "flex-shrink-0 flex flex-col items-center justify-center mx-2 sm:mx-3 cursor-grab active:cursor-grabbing",
+        "w-28 sm:w-40 h-full py-2 touch-manipulation",
         isDragging && "opacity-50 scale-105"
       )}
     >
-      <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-1 sm:mb-2">
+      <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-1.5 sm:mb-2">
         {imgError ? (
-          <span className="text-2xl sm:text-4xl">🍣</span>
+          <span className="text-3xl sm:text-4xl">🍣</span>
         ) : (
           <img 
             src={dish.image} 
@@ -96,8 +96,8 @@ export function SushiItem({
           />
         )}
       </div>
-      <div className="bg-background border border-border rounded px-2 sm:px-3 py-0.5 sm:py-1 shadow-sm">
-        <span className="text-xs sm:text-sm font-medium text-foreground whitespace-nowrap">
+      <div className="bg-background border border-border rounded px-2.5 sm:px-4 py-1 sm:py-1.5 shadow-sm">
+        <span className="text-sm sm:text-base font-medium text-foreground whitespace-nowrap">
           {dish.name}
         </span>
       </div>

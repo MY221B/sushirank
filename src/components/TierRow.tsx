@@ -35,20 +35,20 @@ export function TierRow({
 }: TierRowProps) {
   return (
     <div 
-      className="flex border-b-2 border-foreground/90 min-h-[70px] sm:min-h-[90px]"
+      className="flex border-b-2 border-foreground/90 min-h-[90px] sm:min-h-[110px]"
       data-tier-id={tierId}
     >
       <div 
         className={cn(
-          "w-16 sm:w-28 flex-shrink-0 flex items-center justify-center border-r-2 border-foreground/90",
+          "w-20 sm:w-32 flex-shrink-0 flex items-center justify-center border-r-2 border-foreground/90",
           tierColors[tierId]
         )}
       >
-        <h2 className="text-lg sm:text-2xl font-bold">{tierName}</h2>
+        <h2 className="text-xl sm:text-3xl font-bold">{tierName}</h2>
       </div>
       <div 
         className={cn(
-          "flex-grow p-1.5 sm:p-2 flex flex-wrap gap-1 sm:gap-2 content-start transition-colors duration-200",
+          "flex-grow p-2 sm:p-3 flex flex-wrap gap-2 sm:gap-3 content-start transition-colors duration-200",
           isDragOver && "bg-primary/10"
         )}
         data-tier-id={tierId}
