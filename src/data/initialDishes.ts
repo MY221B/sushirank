@@ -1,65 +1,115 @@
 import { Dish, TierData } from "@/types/sushi";
 
-// 第一批图片
-import bainiaobei from "@/assets/dishes/白鸟贝.jpg";
-import angusSteak from "@/assets/dishes/安格斯牛排配香鹅肝.jpg";
-import bazhuayu from "@/assets/dishes/八爪鱼.jpg";
-import xuexierou from "@/assets/dishes/爆盛雪蟹肉海苔包.jpg";
-import beijibei from "@/assets/dishes/北极贝.jpg";
-import xiaobeizhu from "@/assets/dishes/爆盛小贝柱海苔包.jpg";
-
-// 第二批图片
-import dahailuo from "@/assets/dishes/大海螺.jpg";
-import bimuyu from "@/assets/dishes/比目鱼.jpg";
-import dieyuqunbian from "@/assets/dishes/鲽鱼裙边.jpg";
-import chixiafeiyuzi from "@/assets/dishes/赤虾飞鱼子.jpg";
-import conghuajinqiangyujuan from "@/assets/dishes/葱花金枪鱼卷.jpg";
-import chibei from "@/assets/dishes/赤贝.jpg";
-import feiyuzidoufupi from "@/assets/dishes/飞鱼子豆腐皮寿司.jpg";
-import chixia from "@/assets/dishes/赤虾.jpg";
-import conghuajinqiangyujunjian from "@/assets/dishes/葱花金枪鱼军舰.jpg";
-import daqiechangqijinqiangyunan from "@/assets/dishes/大切长鳍金枪鱼腩芝麻酱油.webp";
-
-// 第三批图片
-import haiman from "@/assets/dishes/海鳗.jpg";
-import huazhilian from "@/assets/dishes/花之恋.jpg";
-import hongganyu from "@/assets/dishes/红甘鱼.jpg";
-import haidanhaitaibao from "@/assets/dishes/海胆海苔包.jpg";
-import fupishousi from "@/assets/dishes/腐皮寿司.jpg";
-import haixianzicaijuan from "@/assets/dishes/海鲜紫菜卷.jpg";
-import heixiangbabang from "@/assets/dishes/黑象拔蚌.jpg";
-import hebuwuyouyu from "@/assets/dishes/和布芜拌鱿鱼.jpg";
-import feiyuzijunjian from "@/assets/dishes/飞鱼子军舰.jpg";
-import houqieshaoquyu from "@/assets/dishes/厚切烧鲭鱼.jpg";
-
-export const initialDishes: Dish[] = [
-  { id: 'dish-0', name: "白鸟贝", image: bainiaobei },
-  { id: 'dish-1', name: "安格斯牛排配香鹅肝", image: angusSteak },
-  { id: 'dish-2', name: "八爪鱼", image: bazhuayu },
-  { id: 'dish-3', name: "爆盛雪蟹肉海苔包", image: xuexierou },
-  { id: 'dish-4', name: "北极贝", image: beijibei },
-  { id: 'dish-5', name: "爆盛小贝柱海苔包", image: xiaobeizhu },
-  { id: 'dish-6', name: "大海螺", image: dahailuo },
-  { id: 'dish-7', name: "比目鱼", image: bimuyu },
-  { id: 'dish-8', name: "鲽鱼裙边", image: dieyuqunbian },
-  { id: 'dish-9', name: "赤虾飞鱼子", image: chixiafeiyuzi },
-  { id: 'dish-10', name: "葱花金枪鱼卷", image: conghuajinqiangyujuan },
-  { id: 'dish-11', name: "赤贝", image: chibei },
-  { id: 'dish-12', name: "飞鱼子豆腐皮寿司", image: feiyuzidoufupi },
-  { id: 'dish-13', name: "赤虾", image: chixia },
-  { id: 'dish-14', name: "葱花金枪鱼军舰", image: conghuajinqiangyujunjian },
-  { id: 'dish-15', name: "大切长鳍金枪鱼腩芝麻酱油", image: daqiechangqijinqiangyunan },
-  { id: 'dish-16', name: "海鳗", image: haiman },
-  { id: 'dish-17', name: "花之恋", image: huazhilian },
-  { id: 'dish-18', name: "红甘鱼", image: hongganyu },
-  { id: 'dish-19', name: "海胆海苔包", image: haidanhaitaibao },
-  { id: 'dish-20', name: "腐皮寿司", image: fupishousi },
-  { id: 'dish-21', name: "海鲜紫菜卷", image: haixianzicaijuan },
-  { id: 'dish-22', name: "黑象拔蚌", image: heixiangbabang },
-  { id: 'dish-23', name: "和布芜拌鱿鱼秋葵军舰", image: hebuwuyouyu },
-  { id: 'dish-24', name: "飞鱼子军舰", image: feiyuzijunjian },
-  { id: 'dish-25', name: "厚切烧鲭鱼", image: houqieshaoquyu },
+// 使用 public 目录下的图片，直接通过路径引用
+const publicImages = [
+  "三文鱼子军舰.jpg",
+  "三文鱼子特盛军舰.jpg",
+  "三文鱼腩.jpg",
+  "严选慢烤牛肉寿司.jpg",
+  "原条海鳗.jpg",
+  "小肌鱼.jpg",
+  "星鳗.webp",
+  "柚子风味炙烧长鳍金枪鱼.jpg",
+  "柚子香鲽鱼鳍边.jpg",
+  "柠檬金枪鱼腩.jpg",
+  "梅子紫苏青瓜卷.jpg",
+  "江瑶贝双味.jpg",
+  "沙律军舰.jpg",
+  "沙律甜酱蟹柳.jpg",
+  "沙律酱蟹柳.jpg",
+  "溏心蛋军舰.jpg",
+  "炙烧三文鱼.jpg",
+  "炙烧三文鱼腩.jpg",
+  "炙烧叉烧.jpg",
+  "炙烧嫩鸡排.jpg",
+  "炙烧松笠鱿鱼.webp",
+  "炙烧盐味柠檬真鲷.jpg",
+  "炙烧盐醋渍鲭鱼.jpg",
+  "炙烧红鱼配柚子胡椒.webp",
+  "炙烧罗勒三文鱼腩.jpg",
+  "炙烧罗勒芝士八爪鱼.jpg",
+  "炙烧罗勒鲜虾.jpg",
+  "炙烧芝士三文鱼腩.jpg",
+  "炙烧芝士嫩鸡排.jpg",
+  "炙烧芝士明太子三文鱼腩.jpg",
+  "炙烧芝士明太子鲜虾.jpg",
+  "炙烧芝士鲜虾.jpg",
+  "炙烧赤虾.jpg",
+  "炙烧金枪鱼.jpg",
+  "炙烧香鹅肝.jpg",
+  "炙烧香鹅肝配海胆.jpg",
+  "炸虾牛油果玉子卷.jpg",
+  "炸软壳蟹.jpg",
+  "熟虾.jpg",
+  "牛油果熟虾.jpg",
+  "牛肉堡寿司.jpg",
+  "特大清蒸雪蟹腿.jpg",
+  "玉子卷配飞鱼子.jpg",
+  "玉子烧.jpg",
+  "玉米沙律军舰.jpg",
+  "玛格丽特风味三文鱼.jpg",
+  "玛格丽特风味炙烧鲜虾.jpg",
+  "珍宝炙烧三文鱼腩.webp",
+  "甜虾.jpg",
+  "甜虾军舰.jpg",
+  "生三文鱼.jpg",
+  "生三文鱼亲子.jpg",
+  "生三文鱼腩.jpg",
+  "生八爪鱼.jpg",
+  "生拌三文鱼军舰.jpg",
+  "生拌海鲜军舰.jpg",
+  "生虾.jpg",
+  "盐味柠檬鱿鱼.jpg",
+  "盐味肥牛.jpg",
+  "盐醋渍鲭鱼.jpg",
+  "盐麴肥嫩长鳍金枪鱼.webp",
+  "真鲷.jpg",
+  "秘制豚五花角煮寿司.jpg",
+  "纳豆军舰.jpg",
+  "纹甲墨鱼.jpg",
+  "芝士玉子烧.jpg",
+  "芝心鸡排.jpg",
+  "芝麻香黑象拔蚌.jpg",
+  "葱花金枪鱼卷.jpg",
+  "蒜香鱿鱼.jpg",
+  "蒲烧鳗鱼.jpg",
+  "蓝鳍金枪鱼中腩.jpg",
+  "蓝鳍金枪鱼大腩.jpg",
+  "虾三味.jpg",
+  "蚬肉军舰.jpg",
+  "蟹柳天妇罗.jpg",
+  "蟹风味沙律军舰.jpg",
+  "酱烤 鲽鱼鳍边.jpg",
+  "金枪鱼.jpg",
+  "金枪鱼军舰.jpg",
+  "金枪鱼卷.jpg",
+  "金枪鱼排.jpg",
+  "金枪鱼新香卷.jpg",
+  "金枪鱼腩.jpg",
+  "长鳍金枪鱼.jpg",
+  "雪蟹肉.jpg",
+  "青瓜卷.jpg",
+  "香葱赤虾.jpg",
+  "鱿鱼.jpg",
+  "鱿鱼天妇罗.jpg",
+  "鱿鱼耳.jpg",
+  "鲜虾天妇罗.jpg",
+  "鲭鱼押寿司.jpg",
+  "鳗鱼海苔包.jpg",
+  "鳗鱼肥牛.jpg",
+  "鳗鱼青瓜卷.jpg",
 ];
+
+// 从文件名提取菜品名称（去掉扩展名）
+const getDishName = (filename: string): string => {
+  return filename.replace(/\.(jpg|webp)$/, '');
+};
+
+export const initialDishes: Dish[] = publicImages.map((filename, index) => ({
+  id: `dish-${index}`,
+  name: getDishName(filename),
+  image: `/${encodeURIComponent(filename)}`,
+}));
 
 export const tierData: TierData[] = [
   { id: 'S', name: '夯' },
