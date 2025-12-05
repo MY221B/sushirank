@@ -171,7 +171,7 @@ const assetNames = new Set(assetDishes.map(d => d.name));
 const publicDishes = publicImages
   .map(filename => ({
     name: getDishName(filename),
-    image: `/${encodeURIComponent(filename)}`,
+    image: `/${filename}`,
   }))
   .filter(dish => !assetNames.has(dish.name));
 
