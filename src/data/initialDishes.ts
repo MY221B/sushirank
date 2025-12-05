@@ -1,6 +1,64 @@
 import { Dish, TierData } from "@/types/sushi";
 
-// 使用 public 目录下的图片，直接通过路径引用
+// src/assets/dishes 目录下的图片
+import bazhuayu from "@/assets/dishes/八爪鱼.jpg";
+import beijibei from "@/assets/dishes/北极贝.jpg";
+import houqieshaoquyu from "@/assets/dishes/厚切烧鲭鱼.jpg";
+import hebuwuyouyu from "@/assets/dishes/和布芜拌鱿鱼.jpg";
+import daqiechangqijinqiangyunan from "@/assets/dishes/大切长鳍金枪鱼腩芝麻酱油.webp";
+import dahailuo from "@/assets/dishes/大海螺.jpg";
+import angusSteak from "@/assets/dishes/安格斯牛排配香鹅肝.jpg";
+import bimuyu from "@/assets/dishes/比目鱼.jpg";
+import haidanhaitaibao from "@/assets/dishes/海胆海苔包.jpg";
+import haixianzicaijuan from "@/assets/dishes/海鲜紫菜卷.jpg";
+import haiman from "@/assets/dishes/海鳗.jpg";
+import xiaobeizhu from "@/assets/dishes/爆盛小贝柱海苔包.jpg";
+import xuexierou from "@/assets/dishes/爆盛雪蟹肉海苔包.jpg";
+import bainiaobei from "@/assets/dishes/白鸟贝.jpg";
+import hongganyu from "@/assets/dishes/红甘鱼.jpg";
+import fupishousi from "@/assets/dishes/腐皮寿司.jpg";
+import huazhilian from "@/assets/dishes/花之恋.jpg";
+import conghuajinqiangyujunjian from "@/assets/dishes/葱花金枪鱼军舰.jpg";
+import conghuajinqiangyujuan from "@/assets/dishes/葱花金枪鱼卷.jpg";
+import chixia from "@/assets/dishes/赤虾.jpg";
+import chixiafeiyuzi from "@/assets/dishes/赤虾飞鱼子.jpg";
+import chibei from "@/assets/dishes/赤贝.jpg";
+import feiyuzijunjian from "@/assets/dishes/飞鱼子军舰.jpg";
+import feiyuzidoufupi from "@/assets/dishes/飞鱼子豆腐皮寿司.jpg";
+import dieyuqunbian from "@/assets/dishes/鲽鱼裙边.jpg";
+import heixiangbabang from "@/assets/dishes/黑象拔蚌.jpg";
+
+// src/assets 导入的菜品
+const assetDishes: { name: string; image: string }[] = [
+  { name: "八爪鱼", image: bazhuayu },
+  { name: "北极贝", image: beijibei },
+  { name: "厚切烧鲭鱼", image: houqieshaoquyu },
+  { name: "和布芜拌鱿鱼秋葵军舰", image: hebuwuyouyu },
+  { name: "大切长鳍金枪鱼腩芝麻酱油", image: daqiechangqijinqiangyunan },
+  { name: "大海螺", image: dahailuo },
+  { name: "安格斯牛排配香鹅肝", image: angusSteak },
+  { name: "比目鱼", image: bimuyu },
+  { name: "海胆海苔包", image: haidanhaitaibao },
+  { name: "海鲜紫菜卷", image: haixianzicaijuan },
+  { name: "海鳗", image: haiman },
+  { name: "爆盛小贝柱海苔包", image: xiaobeizhu },
+  { name: "爆盛雪蟹肉海苔包", image: xuexierou },
+  { name: "白鸟贝", image: bainiaobei },
+  { name: "红甘鱼", image: hongganyu },
+  { name: "腐皮寿司", image: fupishousi },
+  { name: "花之恋", image: huazhilian },
+  { name: "葱花金枪鱼军舰", image: conghuajinqiangyujunjian },
+  { name: "葱花金枪鱼卷", image: conghuajinqiangyujuan },
+  { name: "赤虾", image: chixia },
+  { name: "赤虾飞鱼子", image: chixiafeiyuzi },
+  { name: "赤贝", image: chibei },
+  { name: "飞鱼子军舰", image: feiyuzijunjian },
+  { name: "飞鱼子豆腐皮寿司", image: feiyuzidoufupi },
+  { name: "鲽鱼裙边", image: dieyuqunbian },
+  { name: "黑象拔蚌", image: heixiangbabang },
+];
+
+// public 目录下的图片文件名
 const publicImages = [
   "三文鱼子军舰.jpg",
   "三文鱼子特盛军舰.jpg",
@@ -74,7 +132,9 @@ const publicImages = [
   "蒜香鱿鱼.jpg",
   "蒲烧鳗鱼.jpg",
   "蓝鳍金枪鱼中腩.jpg",
+  "蓝鳍金枪鱼中腩_1.jpg",
   "蓝鳍金枪鱼大腩.jpg",
+  "蓝鳍金枪鱼大腩_1.jpg",
   "虾三味.jpg",
   "蚬肉军舰.jpg",
   "蟹柳天妇罗.jpg",
@@ -87,6 +147,7 @@ const publicImages = [
   "金枪鱼新香卷.jpg",
   "金枪鱼腩.jpg",
   "长鳍金枪鱼.jpg",
+  "长鳍金枪鱼_1.jpg",
   "雪蟹肉.jpg",
   "青瓜卷.jpg",
   "香葱赤虾.jpg",
@@ -100,15 +161,37 @@ const publicImages = [
   "鳗鱼青瓜卷.jpg",
 ];
 
-// 从文件名提取菜品名称（去掉扩展名）
+// 从文件名提取菜品名称
 const getDishName = (filename: string): string => {
-  return filename.replace(/\.(jpg|webp)$/, '');
+  return filename.replace(/\.(jpg|webp)$/, '').replace(/_\d+$/, '');
 };
 
-export const initialDishes: Dish[] = publicImages.map((filename, index) => ({
+// 合并菜品，去重
+const assetNames = new Set(assetDishes.map(d => d.name));
+const publicDishes = publicImages
+  .map(filename => ({
+    name: getDishName(filename),
+    image: `/${encodeURIComponent(filename)}`,
+  }))
+  .filter(dish => !assetNames.has(dish.name));
+
+// 去重同名菜品
+const uniquePublicDishes: { name: string; image: string }[] = [];
+const seenNames = new Set<string>();
+for (const dish of publicDishes) {
+  if (!seenNames.has(dish.name)) {
+    seenNames.add(dish.name);
+    uniquePublicDishes.push(dish);
+  }
+}
+
+export const initialDishes: Dish[] = [
+  ...assetDishes,
+  ...uniquePublicDishes,
+].map((dish, index) => ({
   id: `dish-${index}`,
-  name: getDishName(filename),
-  image: `/${encodeURIComponent(filename)}`,
+  name: dish.name,
+  image: dish.image,
 }));
 
 export const tierData: TierData[] = [
