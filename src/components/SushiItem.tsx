@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Dish } from "@/types/sushi";
 import { cn } from "@/lib/utils";
 
@@ -16,9 +17,16 @@ export function SushiItem({
   onClick,
   isDragging 
 }: SushiItemProps) {
+  const [imgError, setImgError] = useState(false);
+  
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('text/plain', dish.id);
     onDragStart?.(e, dish);
+  };
+
+  const handleImgError = () => {
+    console.error('Image failed to load:', dish.image);
+    setImgError(true);
   };
 
   if (variant === 'tier') {
@@ -34,13 +42,18 @@ export function SushiItem({
           isDragging && "opacity-50 scale-105"
         )}
       >
-        <div className="w-14 h-14 rounded-md overflow-hidden bg-muted mb-1.5">
-          <img 
-            src={dish.image} 
-            alt={dish.name}
-            className="w-full h-full object-cover"
-            draggable={false}
-          />
+        <div className="w-14 h-14 rounded-md overflow-hidden bg-muted mb-1.5 flex items-center justify-center">
+          {imgError ? (
+            <span className="text-2xl">🍣</span>
+          ) : (
+            <img 
+              src={dish.image} 
+              alt={dish.name}
+              className="w-full h-full object-cover"
+              draggable={false}
+              onError={handleImgError}
+            />
+          )}
         </div>
         <span className="text-xs font-medium text-foreground text-center leading-tight line-clamp-2">
           {dish.name}
@@ -60,12 +73,17 @@ export function SushiItem({
       )}
     >
       <div className="w-24 h-24 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-2">
-        <img 
-          src={dish.image} 
-          alt={dish.name}
-          className="w-[85%] h-[85%] object-cover rounded-full"
-          draggable={false}
-        />
+        {imgError ? (
+          <span className="text-4xl">🍣</span>
+        ) : (
+          <img 
+            src={dish.image} 
+            alt={dish.name}
+            className="w-[85%] h-[85%] object-cover rounded-full"
+            draggable={false}
+            onError={handleImgError}
+          />
+        )}
       </div>
       <div className="bg-background border border-border rounded px-3 py-1 shadow-sm">
         <span className="text-sm font-medium text-foreground whitespace-nowrap">
