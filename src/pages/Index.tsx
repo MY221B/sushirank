@@ -5,6 +5,8 @@ import { TierRow } from "@/components/TierRow";
 import { ConveyorBelt } from "@/components/ConveyorBelt";
 import { ListView } from "@/components/ListView";
 import { AddDishModal } from "@/components/AddDishModal";
+import { DragPreview } from "@/components/DragPreview";
+import { useTouchDrag } from "@/hooks/useTouchDrag";
 import { Plus, List, RotateCcw } from "lucide-react";
 
 type TierItems = Record<TierId, Dish[]>;
@@ -19,6 +21,29 @@ const Index = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [dragOverTier, setDragOverTier] = useState<TierId | null>(null);
   const [draggingFrom, setDraggingFrom] = useState<'pool' | TierId | null>(null);
+
+  // 处理触摸拖拽放下
+  const handleTouchDrop = useCallback((dish: Dish, source: 'pool' | string, targetTierId: string | null) => {
+    if (!targetTierId) return;
+    
+    const tierId = targetTierId as TierId;
+    
+    if (source === 'pool') {
+      setPoolDishes(prev => prev.filter(d => d.id !== dish.id));
+    } else {
+      setTierItems(prev => ({
+        ...prev,
+        [source]: prev[source as TierId].filter(d => d.id !== dish.id)
+      }));
+    }
+    
+    setTierItems(prev => ({
+      ...prev,
+      [tierId]: [...prev[tierId], dish]
+    }));
+  }, []);
+
+  const { state: touchState, handleTouchStart, handleTouchMove, handleTouchEnd, dragPreviewRef } = useTouchDrag(handleTouchDrop);
 
   const handleDragStart = useCallback((e: React.DragEvent, dish: Dish, source: 'pool' | TierId) => {
     e.dataTransfer.setData('dishId', dish.id);
@@ -101,20 +126,22 @@ const Index = () => {
     <div 
       className="min-h-screen bg-background pb-6"
       onDragEnd={handleDragEnd}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Header */}
-      <header className="py-8 text-center">
-        <h1 className="text-4xl font-bold text-foreground tracking-tight">
+      <header className="py-8 text-center px-4">
+        <h1 className="text-2xl sm:text-4xl font-bold text-foreground tracking-tight">
           🍣 回转寿司美食排行榜
         </h1>
-        <p className="text-muted-foreground mt-2">
+        <p className="text-muted-foreground mt-2 text-sm sm:text-base">
           拖拽寿司到对应等级，点击已排名的寿司可将其移回传送带
         </p>
       </header>
 
       {/* Tier Grid */}
-      <main className="px-6 max-w-6xl mx-auto">
-        <div className="border-2 border-foreground/90 rounded-t-lg overflow-hidden mb-10 animate-fade-in">
+      <main className="px-3 sm:px-6 max-w-6xl mx-auto">
+        <div className="border-2 border-foreground/90 rounded-t-lg overflow-hidden mb-6 sm:mb-10 animate-fade-in">
           {tierData.map((tier) => (
             <TierRow
               key={tier.id}
@@ -128,50 +155,52 @@ const Index = () => {
               }}
               onItemClick={(dish) => handleTierItemClick(dish, tier.id)}
               onItemDragStart={(e, dish) => handleDragStart(e, dish, tier.id)}
-              isDragOver={dragOverTier === tier.id}
+              onTouchStart={handleTouchStart}
+              isDragOver={dragOverTier === tier.id || touchState.isDragging}
             />
           ))}
         </div>
 
         {/* Control Buttons */}
-        <div className="flex justify-end gap-3 mb-4">
+        <div className="flex justify-end gap-2 sm:gap-3 mb-4 flex-wrap">
           <button 
             onClick={handleReset}
-            className="wood-btn flex items-center gap-2"
+            className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
             重置
           </button>
           <button 
             onClick={() => setAddModalOpen(true)}
-            className="wood-btn flex items-center gap-2"
+            className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
           >
-            <Plus className="w-4 h-4" />
-            新增菜品
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+            新增
           </button>
           <button 
             onClick={() => setIsListView(!isListView)}
-            className="wood-btn flex items-center gap-2"
+            className="wood-btn flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
           >
-            <List className="w-4 h-4" />
+            <List className="w-3 h-3 sm:w-4 sm:h-4" />
             {isListView ? '传送带' : '列表'}
           </button>
         </div>
 
         {/* Dish Pool */}
         <section className="bg-secondary/50 border-t border-border rounded-lg overflow-hidden animate-fade-in">
-          {/* Pool Content */}
           <div>
             {isListView ? (
               <ListView 
                 dishes={poolDishes}
                 onDragStart={(e, dish) => handleDragStart(e, dish, 'pool')}
+                onTouchStart={handleTouchStart}
               />
             ) : (
               <ConveyorBelt
                 dishes={poolDishes}
                 onDragStart={(e, dish) => handleDragStart(e, dish, 'pool')}
-                isPaused={isConveyorPaused}
+                onTouchStart={handleTouchStart}
+                isPaused={isConveyorPaused || touchState.isDragging}
                 onMouseEnter={() => setIsConveyorPaused(true)}
                 onMouseLeave={() => !draggingFrom && setIsConveyorPaused(false)}
               />
@@ -179,6 +208,13 @@ const Index = () => {
           </div>
         </section>
       </main>
+
+      {/* Touch Drag Preview */}
+      <DragPreview
+        ref={dragPreviewRef}
+        dish={touchState.draggedDish}
+        isVisible={touchState.isDragging}
+      />
 
       {/* Add Dish Modal */}
       <AddDishModal
