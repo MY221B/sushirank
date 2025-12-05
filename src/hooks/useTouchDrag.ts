@@ -27,10 +27,31 @@ export function useTouchDrag(
   });
   
   const dragPreviewRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef<{ x: number; y: number } | null>(null);
+
+  // 在拖拽时禁止页面滚动
+  useEffect(() => {
+    if (!state.isDragging) return;
+
+    const preventScroll = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
+    // 使用 passive: false 让 preventDefault 生效
+    document.addEventListener('touchmove', preventScroll, { passive: false });
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    return () => {
+      document.removeEventListener('touchmove', preventScroll);
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    };
+  }, [state.isDragging]);
 
   const handleTouchStart = useCallback((dish: Dish, source: 'pool' | string) => (e: React.TouchEvent) => {
-    e.preventDefault();
     const touch = e.touches[0];
+    positionRef.current = { x: touch.clientX, y: touch.clientY };
     setState({
       isDragging: true,
       draggedDish: dish,
@@ -42,8 +63,8 @@ export function useTouchDrag(
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (!state.isDragging) return;
     
-    e.preventDefault();
     const touch = e.touches[0];
+    positionRef.current = { x: touch.clientX, y: touch.clientY };
     setState(prev => ({
       ...prev,
       dragPosition: { x: touch.clientX, y: touch.clientY },
