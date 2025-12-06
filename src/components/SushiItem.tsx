@@ -84,32 +84,36 @@ export function SushiItem({
       onDragStart={handleDragStart}
       onTouchStart={handleTouchStart}
       className={cn(
-        "relative flex-shrink-0 flex flex-col items-center justify-center mx-2 sm:mx-3 landscape:mx-1 landscape:sm:mx-2 cursor-grab active:cursor-grabbing",
-        "w-28 sm:w-40 landscape:w-20 landscape:sm:w-24 h-full py-2 landscape:py-1 touch-manipulation",
+        "relative flex-shrink-0 flex flex-col items-center cursor-grab active:cursor-grabbing",
+        "w-28 sm:w-36 landscape:w-24 landscape:sm:w-28 h-full touch-manipulation",
         isDragging && "opacity-50 scale-105"
       )}
     >
-      {/* 新品角标 */}
-      {dish.newMonth && (
-        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
-          {dish.newMonth}月新品
-        </div>
-      )}
-      <div className="w-20 h-20 sm:w-28 sm:h-28 landscape:w-14 landscape:h-14 landscape:sm:w-16 landscape:sm:h-16 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1">
-        {imgError ? (
-          <span className="text-3xl sm:text-4xl">🍣</span>
-        ) : (
-          <img 
-            src={dish.image} 
-            alt={dish.name}
-            className="w-[85%] h-[85%] object-cover rounded-full"
-            draggable={false}
-            onError={handleImgError}
-          />
+      {/* 寿司盘子 - 占满传送带高度 */}
+      <div className="flex-1 flex items-center justify-center w-full pt-1">
+        {/* 新品角标 */}
+        {dish.newMonth && (
+          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
+            {dish.newMonth}月新品
+          </div>
         )}
+        <div className="w-[90%] aspect-square max-w-[100px] sm:max-w-[120px] landscape:max-w-[70px] landscape:sm:max-w-[80px] rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center">
+          {imgError ? (
+            <span className="text-3xl sm:text-4xl landscape:text-2xl">🍣</span>
+          ) : (
+            <img 
+              src={dish.image} 
+              alt={dish.name}
+              className="w-[85%] h-[85%] object-cover rounded-full"
+              draggable={false}
+              onError={handleImgError}
+            />
+          )}
+        </div>
       </div>
-      <div className="bg-background border border-border rounded px-2.5 sm:px-4 landscape:px-1.5 landscape:sm:px-2 py-1 sm:py-1.5 landscape:py-0.5 landscape:sm:py-1 shadow-sm max-w-[100px] sm:max-w-[140px] landscape:max-w-[72px] landscape:sm:max-w-[88px]">
-        <span className="text-sm sm:text-base landscape:text-xs landscape:sm:text-sm font-medium text-foreground truncate block text-center">
+      {/* 名牌卡片 - 放在传送带前方 */}
+      <div className="absolute -bottom-6 sm:-bottom-8 landscape:-bottom-5 landscape:sm:-bottom-6 left-1/2 -translate-x-1/2 bg-background border border-border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 shadow-md z-20 w-[90%] max-w-[110px] sm:max-w-[130px] landscape:max-w-[90px] landscape:sm:max-w-[100px]">
+        <span className="text-xs sm:text-sm landscape:text-[10px] landscape:sm:text-xs font-medium text-foreground text-center leading-tight line-clamp-2 block">
           {dish.name}
         </span>
       </div>
