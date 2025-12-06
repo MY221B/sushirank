@@ -82,13 +82,13 @@ export function ConveyorBelt({
   return (
     <div className="relative">
       {/* Top wood rail */}
-      <div className="h-4 sm:h-6 wood-rail" />
+      <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail" />
       
       {/* Belt */}
       <div 
         ref={containerRef}
         className={cn(
-          "h-36 sm:h-48 belt-pattern overflow-x-auto cursor-grab scrollbar-hide",
+          "h-36 sm:h-48 landscape:h-24 landscape:sm:h-28 belt-pattern overflow-x-auto cursor-grab scrollbar-hide",
           isDragging && "cursor-grabbing"
         )}
         onMouseEnter={onMouseEnter}
@@ -121,7 +121,7 @@ export function ConveyorBelt({
       </div>
       
       {/* Bottom wood rail */}
-      <div className="h-4 sm:h-6 wood-rail" />
+      <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail" />
     </div>
   );
 }

@@ -46,9 +46,9 @@ export function SushiItem({
         onTouchStart={handleTouchStart}
         onClick={onClick}
         className={cn(
-          "relative flex flex-col items-center p-1.5 sm:p-2.5 bg-card border border-border rounded-lg cursor-pointer",
+          "relative flex flex-col items-center p-1.5 sm:p-2.5 landscape:p-1 landscape:sm:p-1.5 bg-card border border-border rounded-lg cursor-pointer",
           "hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95",
-          "w-[72px] sm:w-28 animate-scale-in touch-manipulation",
+          "w-[72px] sm:w-28 landscape:w-[52px] landscape:sm:w-20 animate-scale-in touch-manipulation",
           isDragging && "opacity-50 scale-105"
         )}
       >
@@ -58,7 +58,7 @@ export function SushiItem({
             {dish.newMonth}月新品
           </div>
         )}
-        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 flex items-center justify-center">
+        <div className="w-12 h-12 sm:w-16 sm:h-16 landscape:w-8 landscape:h-8 landscape:sm:w-10 landscape:sm:h-10 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1 flex items-center justify-center">
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
           ) : (
@@ -71,7 +71,7 @@ export function SushiItem({
             />
           )}
         </div>
-        <span className="text-[11px] sm:text-sm font-medium text-foreground text-center leading-tight line-clamp-2">
+        <span className="text-[11px] sm:text-sm landscape:text-[9px] landscape:sm:text-[11px] font-medium text-foreground text-center leading-tight line-clamp-2">
           {dish.name}
         </span>
       </div>
@@ -84,8 +84,8 @@ export function SushiItem({
       onDragStart={handleDragStart}
       onTouchStart={handleTouchStart}
       className={cn(
-        "relative flex-shrink-0 flex flex-col items-center justify-center mx-2 sm:mx-3 cursor-grab active:cursor-grabbing",
-        "w-28 sm:w-40 h-full py-2 touch-manipulation",
+        "relative flex-shrink-0 flex flex-col items-center justify-center mx-2 sm:mx-3 landscape:mx-1 landscape:sm:mx-2 cursor-grab active:cursor-grabbing",
+        "w-28 sm:w-40 landscape:w-20 landscape:sm:w-24 h-full py-2 landscape:py-1 touch-manipulation",
         isDragging && "opacity-50 scale-105"
       )}
     >
@@ -95,7 +95,7 @@ export function SushiItem({
           {dish.newMonth}月新品
         </div>
       )}
-      <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-1.5 sm:mb-2">
+      <div className="w-20 h-20 sm:w-28 sm:h-28 landscape:w-14 landscape:h-14 landscape:sm:w-16 landscape:sm:h-16 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1">
         {imgError ? (
           <span className="text-3xl sm:text-4xl">🍣</span>
         ) : (
@@ -108,8 +108,8 @@ export function SushiItem({
           />
         )}
       </div>
-      <div className="bg-background border border-border rounded px-2.5 sm:px-4 py-1 sm:py-1.5 shadow-sm">
-        <span className="text-sm sm:text-base font-medium text-foreground whitespace-nowrap">
+      <div className="bg-background border border-border rounded px-2.5 sm:px-4 landscape:px-1.5 landscape:sm:px-2 py-1 sm:py-1.5 landscape:py-0.5 landscape:sm:py-1 shadow-sm">
+        <span className="text-sm sm:text-base landscape:text-xs landscape:sm:text-sm font-medium text-foreground whitespace-nowrap">
           {dish.name}
         </span>
       </div>
