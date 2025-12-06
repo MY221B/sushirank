@@ -200,7 +200,7 @@ const Index = () => {
         </div>
 
         {/* Dish Pool */}
-        <section className="bg-secondary/50 border-t border-border rounded-lg overflow-hidden animate-fade-in">
+        <section className="bg-secondary/50 border-t border-border rounded-lg overflow-visible animate-fade-in">
           {filteredPoolDishes.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
               {searchQuery ? `没有找到 "${searchQuery}" 相关的菜品` : '菜品池为空'}
