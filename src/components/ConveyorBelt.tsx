@@ -80,15 +80,15 @@ export function ConveyorBelt({
   }, []);
 
   return (
-    <div className="relative pb-10 sm:pb-12 landscape:pb-8 landscape:sm:pb-10 overflow-visible">
+    <div className="relative overflow-visible">
       {/* Top wood rail */}
       <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail" />
       
-      {/* Belt - 需要 overflow-y-visible 让名牌卡片显示出来 */}
+      {/* Belt - 高度增加以容纳盘子+名牌卡片 */}
       <div 
         ref={containerRef}
         className={cn(
-          "h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 belt-pattern overflow-x-auto overflow-y-visible cursor-grab scrollbar-hide",
+          "h-44 sm:h-56 landscape:h-28 landscape:sm:h-36 belt-pattern overflow-x-auto overflow-y-visible cursor-grab scrollbar-hide",
           isDragging && "cursor-grabbing"
         )}
         onMouseEnter={onMouseEnter}
@@ -102,7 +102,7 @@ export function ConveyorBelt({
       >
         <div 
           className={cn(
-            "flex h-full items-center px-2",
+            "flex h-full items-start pt-2 px-2",
             !isDragging && "animate-conveyor",
             (isPaused || isDragging) && "paused"
           )}
@@ -120,8 +120,8 @@ export function ConveyorBelt({
         </div>
       </div>
       
-      {/* Front wood rail - high z-index, cards float above this */}
-      <div className="absolute bottom-0 left-0 right-0 h-10 sm:h-14 landscape:h-8 landscape:sm:h-10 wood-rail-front z-10 pointer-events-none" />
+      {/* Bottom wood rail */}
+      <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail" />
     </div>
   );
 }

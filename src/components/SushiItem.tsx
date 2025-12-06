@@ -84,20 +84,20 @@ export function SushiItem({
       onDragStart={handleDragStart}
       onTouchStart={handleTouchStart}
       className={cn(
-        "relative flex-shrink-0 flex flex-col items-center cursor-grab active:cursor-grabbing",
-        "w-28 sm:w-36 landscape:w-24 landscape:sm:w-28 h-full touch-manipulation",
+        "flex-shrink-0 flex flex-col items-center cursor-grab active:cursor-grabbing",
+        "w-28 sm:w-36 landscape:w-24 landscape:sm:w-28 touch-manipulation",
         isDragging && "opacity-50 scale-105"
       )}
     >
-      {/* 寿司盘子 - 占满传送带高度 */}
-      <div className="flex-1 flex items-center justify-center w-full pt-1">
+      {/* 寿司盘子 */}
+      <div className="relative flex items-center justify-center w-full pt-1">
         {/* 新品角标 */}
         {dish.newMonth && (
-          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
+          <div className="absolute top-0 right-0 sm:top-1 sm:right-1 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
             {dish.newMonth}月新品
           </div>
         )}
-        <div className="w-[90%] aspect-square max-w-[100px] sm:max-w-[120px] landscape:max-w-[70px] landscape:sm:max-w-[80px] rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center">
+        <div className="w-[85%] aspect-square max-w-[90px] sm:max-w-[110px] landscape:max-w-[65px] landscape:sm:max-w-[75px] rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center">
           {imgError ? (
             <span className="text-3xl sm:text-4xl landscape:text-2xl">🍣</span>
           ) : (
@@ -111,8 +111,8 @@ export function SushiItem({
           )}
         </div>
       </div>
-      {/* 名牌卡片 - 浮在前挡板上方 */}
-      <div className="absolute bottom-[-2.25rem] sm:bottom-[-2.75rem] landscape:bottom-[-1.75rem] landscape:sm:bottom-[-2rem] left-1/2 -translate-x-1/2 bg-background border border-border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg z-30 w-[90%] max-w-[110px] sm:max-w-[130px] landscape:max-w-[90px] landscape:sm:max-w-[100px]">
+      {/* 名牌卡片 - 使用负margin与盘子重叠，在正常流中 */}
+      <div className="relative -mt-1 z-20 bg-background border border-border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg w-[90%] max-w-[100px] sm:max-w-[120px] landscape:max-w-[85px] landscape:sm:max-w-[95px]">
         <span className="text-xs sm:text-sm landscape:text-[10px] landscape:sm:text-xs font-medium text-foreground text-center leading-tight line-clamp-2 block">
           {dish.name}
         </span>
