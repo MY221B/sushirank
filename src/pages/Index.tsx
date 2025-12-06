@@ -109,7 +109,7 @@ const Index = () => {
       ...prev,
       [tierId]: prev[tierId].filter(d => d.id !== dish.id)
     }));
-    setPoolDishes(prev => [...prev, dish]);
+    setPoolDishes(prev => [...prev, dish].sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')));
   }, []);
 
   const handleAddDish = useCallback((name: string, image: string) => {
