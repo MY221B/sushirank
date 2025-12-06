@@ -130,15 +130,15 @@ const Index = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* Header */}
-      <header className="py-8 text-center px-4">
-        <h1 className="text-2xl sm:text-4xl font-bold text-foreground tracking-tight">
+      <header className="py-8 landscape:py-2 landscape:sm:py-3 text-center px-4">
+        <h1 className="text-2xl sm:text-4xl landscape:text-lg landscape:sm:text-xl font-bold text-foreground tracking-tight">
           🍣 回转寿司美食排行榜
         </h1>
       </header>
 
       {/* Tier Grid */}
-      <main className="px-3 sm:px-6 max-w-6xl mx-auto">
-        <div className="border-2 border-foreground/90 rounded-t-lg overflow-hidden mb-6 sm:mb-10 animate-fade-in">
+      <main className="px-3 sm:px-6 landscape:px-2 landscape:sm:px-4 max-w-6xl mx-auto">
+        <div className="border-2 border-foreground/90 rounded-t-lg overflow-hidden mb-6 sm:mb-10 landscape:mb-2 landscape:sm:mb-3 animate-fade-in">
           {tierData.map((tier) => (
             <TierRow
               key={tier.id}
@@ -159,7 +159,7 @@ const Index = () => {
         </div>
 
         {/* Search and Control Buttons */}
-        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 landscape:gap-1 landscape:sm:gap-2 mb-4 landscape:mb-1 landscape:sm:mb-2">
           {/* Search Input */}
           <div className="relative flex-1 max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
