@@ -35,7 +35,7 @@ export function TierRow({
 }: TierRowProps) {
   return (
     <div 
-      className="flex border-b-2 border-foreground/90 min-h-[90px] sm:min-h-[110px] landscape:min-h-[72px] landscape:sm:min-h-[80px]"
+      className="flex border-b-2 border-foreground/90 min-h-[90px] sm:min-h-[110px] landscape:min-h-[56px] landscape:sm:min-h-[64px]"
       data-tier-id={tierId}
     >
       <div 
