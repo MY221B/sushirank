@@ -80,15 +80,15 @@ export function ConveyorBelt({
   }, []);
 
   return (
-    <div className="relative pb-10 sm:pb-12 landscape:pb-8 landscape:sm:pb-10">
+    <div className="relative pb-10 sm:pb-12 landscape:pb-8 landscape:sm:pb-10 overflow-visible">
       {/* Top wood rail */}
       <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail" />
       
-      {/* Belt */}
+      {/* Belt - 需要 overflow-y-visible 让名牌卡片显示出来 */}
       <div 
         ref={containerRef}
         className={cn(
-          "h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 belt-pattern overflow-x-auto cursor-grab scrollbar-hide",
+          "h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 belt-pattern overflow-x-auto overflow-y-visible cursor-grab scrollbar-hide",
           isDragging && "cursor-grabbing"
         )}
         onMouseEnter={onMouseEnter}
