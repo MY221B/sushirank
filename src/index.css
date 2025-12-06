@@ -148,6 +148,20 @@
     border-top: 2px solid hsl(var(--wood-light));
     border-bottom: 2px solid hsl(var(--wood-dark));
   }
+
+  .wood-rail-front {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--wood-light)) 0%,
+      hsl(var(--wood)) 20%,
+      hsl(var(--wood)) 80%,
+      hsl(var(--wood-dark)) 100%
+    );
+    border-top: 3px solid hsl(var(--wood-light));
+    box-shadow: 
+      0 -4px 8px rgba(0, 0, 0, 0.15),
+      inset 0 2px 4px rgba(255, 255, 255, 0.2);
+  }
 }
 
 /* Custom animations */

@@ -111,8 +111,8 @@ export function SushiItem({
           )}
         </div>
       </div>
-      {/* 名牌卡片 - 放在传送带前方 */}
-      <div className="absolute -bottom-6 sm:-bottom-8 landscape:-bottom-5 landscape:sm:-bottom-6 left-1/2 -translate-x-1/2 bg-background border border-border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 shadow-md z-20 w-[90%] max-w-[110px] sm:max-w-[130px] landscape:max-w-[90px] landscape:sm:max-w-[100px]">
+      {/* 名牌卡片 - 浮在前挡板上方 */}
+      <div className="absolute bottom-[-2.25rem] sm:bottom-[-2.75rem] landscape:bottom-[-1.75rem] landscape:sm:bottom-[-2rem] left-1/2 -translate-x-1/2 bg-background border border-border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg z-30 w-[90%] max-w-[110px] sm:max-w-[130px] landscape:max-w-[90px] landscape:sm:max-w-[100px]">
         <span className="text-xs sm:text-sm landscape:text-[10px] landscape:sm:text-xs font-medium text-foreground text-center leading-tight line-clamp-2 block">
           {dish.name}
         </span>
