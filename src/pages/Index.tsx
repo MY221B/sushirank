@@ -134,9 +134,6 @@ const Index = () => {
         <h1 className="text-2xl sm:text-4xl font-bold text-foreground tracking-tight">
           🍣 回转寿司美食排行榜
         </h1>
-        <p className="text-muted-foreground mt-2 text-sm sm:text-base">
-          拖拽寿司到对应等级，点击已排名的寿司可将其移回传送带
-        </p>
       </header>
 
       {/* Tier Grid */}
