@@ -19,7 +19,7 @@ const tierColors: Record<TierId, string> = {
   A: 'bg-tier-a text-foreground',
   B: 'bg-tier-b text-foreground',
   C: 'bg-tier-c text-foreground',
-  D: 'bg-tier-d text-foreground border-r border-border',
+  D: 'bg-tier-d text-foreground',
 };
 
 export function TierRow({ 
