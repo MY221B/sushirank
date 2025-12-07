@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dish } from "@/types/sushi";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 interface SushiItemProps {
   dish: Dish;
@@ -19,8 +20,7 @@ export function SushiItem({
   onClick,
   isDragging 
 }: SushiItemProps) {
-  // 图片已经通过 Vite 内联成 base64，几乎不会加载失败
-  // 但保留一个简单的 fallback 以防万一
+  const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   
   const handleDragStart = (e: React.DragEvent) => {
@@ -58,13 +58,19 @@ export function SushiItem({
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
           ) : (
-            <img 
-              src={dish.image} 
-              alt={dish.name}
-              className="w-full h-full object-cover"
-              draggable={false}
-              onError={() => setImgError(true)}
-            />
+            <>
+              {!imgLoaded && (
+                <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground animate-spin absolute" />
+              )}
+              <img 
+                src={dish.image} 
+                alt={dish.name}
+                className={cn("w-full h-full object-cover transition-opacity duration-200", imgLoaded ? "opacity-100" : "opacity-0")}
+                draggable={false}
+                onLoad={() => setImgLoaded(true)}
+                onError={() => setImgError(true)}
+              />
+            </>
           )}
         </div>
         <div className="w-full h-[2rem] sm:h-[2.5rem] landscape:h-[1.6rem] landscape:sm:h-[2rem] flex items-center justify-center px-1">
@@ -104,13 +110,19 @@ export function SushiItem({
           {imgError ? (
             <span className="text-3xl sm:text-4xl">🍣</span>
           ) : (
-            <img 
-              src={dish.image} 
-              alt={dish.name}
-              className="w-[85%] h-[85%] object-cover rounded-full"
-              draggable={false}
-              onError={() => setImgError(true)}
-            />
+            <>
+              {!imgLoaded && (
+                <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 text-muted-foreground animate-spin absolute" />
+              )}
+              <img 
+                src={dish.image} 
+                alt={dish.name}
+                className={cn("w-[85%] h-[85%] object-cover rounded-full transition-opacity duration-200", imgLoaded ? "opacity-100" : "opacity-0")}
+                draggable={false}
+                onLoad={() => setImgLoaded(true)}
+                onError={() => setImgError(true)}
+              />
+            </>
           )}
         </div>
       </div>
