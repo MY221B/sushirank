@@ -1,6 +1,7 @@
 import { Dish, TierData } from "@/types/sushi";
 
 // 使用 Vite glob import 导入所有 src/assets/dishes 下所有子文件夹的图片
+// Last rebuild: 2025-12-07
 const dishImages = import.meta.glob<{ default: string }>(
   '@/assets/dishes/**/*.{jpg,webp}',
   { eager: true }
