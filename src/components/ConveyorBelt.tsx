@@ -80,15 +80,18 @@ export function ConveyorBelt({
   }, []);
 
   return (
-    <div className="relative pb-10 sm:pb-12 landscape:pb-8 landscape:sm:pb-10 overflow-visible">
+    <div className="relative overflow-visible">
       {/* Top wood rail */}
       <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail" />
+
+      {/* Track Background - Absolute positioned behind the scroll container */}
+      <div className="absolute left-0 right-0 z-0 belt-pattern h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 top-4 sm:top-6 landscape:top-2 landscape:sm:top-3" />
       
-      {/* Belt - 需要 overflow-y-visible 让名牌卡片显示出来 */}
+      {/* Belt - Scrollable container, taller to fit cards, transparent, high z-index */}
       <div 
         ref={containerRef}
         className={cn(
-          "h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 belt-pattern overflow-x-auto overflow-y-visible cursor-grab scrollbar-hide",
+          "relative z-20 h-48 sm:h-60 landscape:h-32 landscape:sm:h-36 overflow-x-auto cursor-grab scrollbar-hide",
           isDragging && "cursor-grabbing"
         )}
         onMouseEnter={onMouseEnter}
@@ -121,7 +124,7 @@ export function ConveyorBelt({
       </div>
       
       {/* Front wood rail - high z-index, cards float above this */}
-      <div className="absolute bottom-0 left-0 right-0 h-10 sm:h-14 landscape:h-8 landscape:sm:h-10 wood-rail-front z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-24 landscape:h-12 landscape:sm:h-16 wood-rail-front z-10 pointer-events-none" />
     </div>
   );
 }

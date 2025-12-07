@@ -89,8 +89,8 @@ export function SushiItem({
         isDragging && "opacity-50 scale-105"
       )}
     >
-      {/* 寿司盘子 - 占满传送带高度 */}
-      <div className="flex-1 flex items-center justify-center w-full pt-1">
+      {/* 寿司盘子 - 固定高度匹配背景轨道 */}
+      <div className="flex-none flex items-center justify-center w-full h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 pt-1">
         {/* 新品角标 */}
         {dish.newMonth && (
           <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
@@ -111,9 +111,9 @@ export function SushiItem({
           )}
         </div>
       </div>
-      {/* 名牌卡片 - 浮在前挡板上方 */}
-      <div className="absolute bottom-[-2.25rem] sm:bottom-[-2.75rem] landscape:bottom-[-1.75rem] landscape:sm:bottom-[-2rem] left-1/2 -translate-x-1/2 bg-background border border-border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 shadow-lg z-30 w-[90%] max-w-[110px] sm:max-w-[130px] landscape:max-w-[90px] landscape:sm:max-w-[100px]">
-        <span className="text-xs sm:text-sm landscape:text-[10px] landscape:sm:text-xs font-medium text-foreground text-center leading-tight line-clamp-2 block">
+      {/* 名牌卡片 - 位于盘子下方，利用容器的额外高度 */}
+      <div className="absolute bottom-5 sm:bottom-10 landscape:bottom-3 left-1/2 -translate-x-1/2 bg-[#fcfcfc] rounded-xl shadow-md z-30 w-[100px] h-[42px] sm:w-[130px] sm:h-[54px] landscape:w-[90px] landscape:h-[40px] flex items-center justify-center px-2 border-b-4 border-gray-200">
+        <span className="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight line-clamp-2 font-serif">
           {dish.name}
         </span>
       </div>
