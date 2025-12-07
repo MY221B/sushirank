@@ -82,46 +82,52 @@ export function ConveyorBelt({
   return (
     <div className="relative">
       {/* Top wood rail */}
-      <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail" />
+      <div className="h-4 sm:h-6 landscape:h-2 landscape:sm:h-3 wood-rail relative z-10" />
       
-      {/* Belt */}
-      <div 
-        ref={containerRef}
-        className={cn(
-          "h-36 sm:h-48 landscape:h-24 landscape:sm:h-28 belt-pattern overflow-x-auto cursor-grab scrollbar-hide",
-          isDragging && "cursor-grabbing"
-        )}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={handleMouseLeaveContainer}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchStart={handleTouchStartScroll}
-        onTouchMove={handleTouchMoveScroll}
-        onTouchEnd={handleTouchEndScroll}
-      >
+      {/* Belt area with layered structure */}
+      <div className="relative h-44 sm:h-56 landscape:h-28 landscape:sm:h-32">
+        {/* Belt pattern background - absolute positioned */}
+        <div className="absolute inset-x-0 top-0 h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 belt-pattern z-0" />
+        
+        {/* Scrolling container - above the front rail */}
         <div 
+          ref={containerRef}
           className={cn(
-            "flex h-full items-center",
-            !isDragging && "animate-conveyor",
-            (isPaused || isDragging) && "paused"
+            "absolute inset-x-0 top-0 h-full overflow-x-auto cursor-grab scrollbar-hide z-20",
+            isDragging && "cursor-grabbing"
           )}
-          style={{ width: 'fit-content' }}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={handleMouseLeaveContainer}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onTouchStart={handleTouchStartScroll}
+          onTouchMove={handleTouchMoveScroll}
+          onTouchEnd={handleTouchEndScroll}
         >
-          {dishes.map((dish, index) => (
-            <SushiItem
-              key={`${dish.id}-${index}`}
-              dish={dish}
-              variant="belt"
-              onDragStart={onDragStart}
-              onTouchStart={onTouchStart ? onTouchStart(dish, 'pool') : undefined}
-            />
-          ))}
+          <div 
+            className={cn(
+              "flex h-full items-start pt-2 sm:pt-4 landscape:pt-1 landscape:sm:pt-2",
+              !isDragging && "animate-conveyor",
+              (isPaused || isDragging) && "paused"
+            )}
+            style={{ width: 'fit-content' }}
+          >
+            {dishes.map((dish, index) => (
+              <SushiItem
+                key={`${dish.id}-${index}`}
+                dish={dish}
+                variant="belt"
+                onDragStart={onDragStart}
+                onTouchStart={onTouchStart ? onTouchStart(dish, 'pool') : undefined}
+              />
+            ))}
+          </div>
         </div>
+        
+        {/* Front wood rail - below the scrolling content */}
+        <div className="absolute inset-x-0 bottom-0 h-12 sm:h-16 landscape:h-8 landscape:sm:h-10 wood-rail z-10" />
       </div>
-      
-      {/* Bottom wood rail */}
-      <div className="h-12 sm:h-16 landscape:h-8 landscape:sm:h-10 wood-rail" />
     </div>
   );
 }
