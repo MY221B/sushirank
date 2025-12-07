@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Dish } from "@/types/sushi";
 import { cn } from "@/lib/utils";
 
@@ -11,8 +11,8 @@ interface SushiItemProps {
   isDragging?: boolean;
 }
 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // 1秒后重试
+const MAX_RETRIES = 5;
+const BASE_RETRY_DELAY = 500;
 
 export function SushiItem({ 
   dish, 
@@ -24,8 +24,52 @@ export function SushiItem({
 }: SushiItemProps) {
   const [imgError, setImgError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const retryCountRef = useRef(0);
   const imgRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  
+  // IntersectionObserver 实现真正的懒加载
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            // 延迟一小段时间后开始加载，避免同时触发太多请求
+            const randomDelay = Math.random() * 200;
+            setTimeout(() => setShouldLoad(true), randomDelay);
+          }
+        });
+      },
+      {
+        rootMargin: '100px', // 提前100px开始加载
+        threshold: 0.01
+      }
+    );
+
+    observer.observe(container);
+    return () => {
+      observer.disconnect();
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // 当重新可见时，如果之前失败了，重试加载
+  useEffect(() => {
+    if (isVisible && imgError && retryCountRef.current < MAX_RETRIES) {
+      setImgError(false);
+      setIsLoading(true);
+      retryCountRef.current = 0;
+    }
+  }, [isVisible, imgError]);
   
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('dishId', dish.id);
@@ -42,23 +86,21 @@ export function SushiItem({
   const handleImgError = useCallback(() => {
     if (retryCountRef.current < MAX_RETRIES) {
       retryCountRef.current += 1;
-      console.warn(`Image load failed, retrying (${retryCountRef.current}/${MAX_RETRIES}):`, dish.image);
+      // 指数退避：500ms, 1000ms, 2000ms, 4000ms, 8000ms
+      const delay = BASE_RETRY_DELAY * Math.pow(2, retryCountRef.current - 1);
       
-      // 延迟后重试加载
-      setTimeout(() => {
-        if (imgRef.current) {
-          // 通过修改 src 来触发重新加载
+      retryTimeoutRef.current = setTimeout(() => {
+        if (imgRef.current && isVisible) {
           const currentSrc = imgRef.current.src;
           imgRef.current.src = '';
           imgRef.current.src = currentSrc;
         }
-      }, RETRY_DELAY * retryCountRef.current);
+      }, delay);
     } else {
-      console.error('Image failed to load after retries:', dish.image);
       setImgError(true);
       setIsLoading(false);
     }
-  }, [dish.image]);
+  }, [isVisible]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     // 阻止默认行为以启用自定义拖拽
@@ -69,6 +111,7 @@ export function SushiItem({
   if (variant === 'tier') {
     return (
       <div
+        ref={containerRef}
         draggable
         onDragStart={handleDragStart}
         onTouchStart={handleTouchStart}
@@ -89,6 +132,8 @@ export function SushiItem({
         <div className="w-14 h-14 sm:w-20 sm:h-20 landscape:w-10 landscape:h-10 landscape:sm:w-12 landscape:sm:h-12 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1 flex items-center justify-center">
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
+          ) : !shouldLoad ? (
+            <span className="text-xl sm:text-3xl opacity-30">🍣</span>
           ) : (
             <>
               {isLoading && <span className="text-xl sm:text-3xl opacity-30">🍣</span>}
@@ -98,7 +143,6 @@ export function SushiItem({
                 alt={dish.name}
                 className={cn("w-full h-full object-cover", isLoading && "hidden")}
                 draggable={false}
-                loading="lazy"
                 onLoad={handleImgLoad}
                 onError={handleImgError}
               />
@@ -121,6 +165,7 @@ export function SushiItem({
 
   return (
     <div
+      ref={containerRef}
       draggable
       onDragStart={handleDragStart}
       onTouchStart={handleTouchStart}
@@ -141,6 +186,8 @@ export function SushiItem({
         <div className="w-20 h-20 sm:w-28 sm:h-28 landscape:w-14 landscape:h-14 landscape:sm:w-16 landscape:sm:h-16 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center">
           {imgError ? (
             <span className="text-3xl sm:text-4xl">🍣</span>
+          ) : !shouldLoad ? (
+            <span className="text-3xl sm:text-4xl opacity-30">🍣</span>
           ) : (
             <>
               {isLoading && <span className="text-3xl sm:text-4xl opacity-30">🍣</span>}
@@ -150,7 +197,6 @@ export function SushiItem({
                 alt={dish.name}
                 className={cn("w-[85%] h-[85%] object-cover rounded-full", isLoading && "hidden")}
                 draggable={false}
-                loading="lazy"
                 onLoad={handleImgLoad}
                 onError={handleImgError}
               />
