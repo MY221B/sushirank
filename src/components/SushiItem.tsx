@@ -37,14 +37,11 @@ export function SushiItem({
   if (variant === 'tier') {
     return (
       <div
-        draggable
-        onDragStart={handleDragStart}
-        onTouchStart={handleTouchStart}
         onClick={onClick}
         className={cn(
-          "relative flex flex-col items-center px-0 py-1 sm:px-0.5 sm:py-1.5 landscape:px-0 landscape:py-0.5 landscape:sm:px-0 landscape:sm:py-1 bg-card border border-border rounded-lg cursor-pointer",
-          "hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95",
-          "w-[5.5rem] sm:w-[7rem] landscape:w-[4.5rem] landscape:sm:w-[5.5rem] animate-scale-in touch-manipulation",
+          "relative flex flex-col items-center px-0 py-1 sm:px-0.5 sm:py-1.5 landscape:px-0 landscape:py-0.5 landscape:sm:px-0 landscape:sm:py-1 bg-card border border-border rounded-lg",
+          "hover:shadow-md transition-all duration-200",
+          "w-[5.5rem] sm:w-[7rem] landscape:w-[4.5rem] landscape:sm:w-[5.5rem] animate-scale-in",
           isDragging && "opacity-50 scale-105"
         )}
       >
@@ -54,7 +51,13 @@ export function SushiItem({
             {dish.newMonth}月新品
           </div>
         )}
-        <div className="w-14 h-14 sm:w-20 sm:h-20 landscape:w-10 landscape:h-10 landscape:sm:w-12 landscape:sm:h-12 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1 flex items-center justify-center">
+        {/* 只有图片区域可拖动 */}
+        <div 
+          draggable
+          onDragStart={handleDragStart}
+          onTouchStart={handleTouchStart}
+          className="w-14 h-14 sm:w-20 sm:h-20 landscape:w-10 landscape:h-10 landscape:sm:w-12 landscape:sm:h-12 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1 flex items-center justify-center cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-transform touch-manipulation"
+        >
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
           ) : (
@@ -73,6 +76,7 @@ export function SushiItem({
             </>
           )}
         </div>
+        {/* 名称区域不可拖动，允许滚动 */}
         <div className="w-full h-[2rem] sm:h-[2.5rem] landscape:h-[1.6rem] landscape:sm:h-[2rem] flex items-center justify-center px-1">
           <span className={cn(
             "font-medium text-foreground text-center leading-tight block",
