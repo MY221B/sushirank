@@ -62,14 +62,6 @@ export function SushiItem({
     };
   }, []);
 
-  // 当重新可见时，如果之前失败了，重试加载
-  useEffect(() => {
-    if (isVisible && imgError && retryCountRef.current < MAX_RETRIES) {
-      setImgError(false);
-      setIsLoading(true);
-      retryCountRef.current = 0;
-    }
-  }, [isVisible, imgError]);
   
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('dishId', dish.id);
@@ -90,7 +82,7 @@ export function SushiItem({
       const delay = BASE_RETRY_DELAY * Math.pow(2, retryCountRef.current - 1);
       
       retryTimeoutRef.current = setTimeout(() => {
-        if (imgRef.current && isVisible) {
+        if (imgRef.current) {
           const currentSrc = imgRef.current.src;
           imgRef.current.src = '';
           imgRef.current.src = currentSrc;
@@ -100,7 +92,7 @@ export function SushiItem({
       setImgError(true);
       setIsLoading(false);
     }
-  }, [isVisible]);
+  }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     // 阻止默认行为以启用自定义拖拽
