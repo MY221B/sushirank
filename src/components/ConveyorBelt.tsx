@@ -106,10 +106,12 @@ export function ConveyorBelt({
         <div 
           className={cn(
             "flex h-full items-center px-2",
-            !isDragging && "animate-conveyor",
-            (isPaused || isDragging) && "paused"
+            !isDragging && !isPaused && "animate-conveyor"
           )}
-          style={{ width: 'fit-content' }}
+          style={{ 
+            width: 'fit-content',
+            transform: isDragging ? 'none' : undefined
+          }}
         >
           {dishes.map((dish, index) => (
             <SushiItem
