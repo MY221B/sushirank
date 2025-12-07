@@ -130,7 +130,7 @@ const Index = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* Header */}
-      <header className="py-8 landscape:py-2 landscape:sm:py-3 text-center px-4">
+      <header className="py-4 landscape:py-1 landscape:sm:py-2 text-center px-4">
         <h1 className="text-2xl sm:text-4xl landscape:text-lg landscape:sm:text-xl font-bold text-foreground tracking-tight">
           🍣 回转寿司美食排行榜
         </h1>
