@@ -36,7 +36,7 @@ export function ConveyorBelt({
     const content = contentRef.current;
     if (!container || !content) return;
 
-    const speed = 1.2; // 像素/帧
+    const speed = 1.5; // 像素/帧
     
     const animate = () => {
       if (!isPaused && !isDragging && container && content) {
