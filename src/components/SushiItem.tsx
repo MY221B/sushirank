@@ -48,7 +48,7 @@ export function SushiItem({
         className={cn(
           "relative flex flex-col items-center p-1.5 sm:p-2.5 landscape:p-1 landscape:sm:p-1.5 bg-card border border-border rounded-lg cursor-pointer",
           "hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95",
-          "w-[72px] sm:w-28 landscape:w-[52px] landscape:sm:w-20 animate-scale-in touch-manipulation",
+          "w-[6.5rem] sm:w-[8rem] landscape:w-[5rem] landscape:sm:w-[6rem] animate-scale-in touch-manipulation",
           isDragging && "opacity-50 scale-105"
         )}
       >
@@ -58,7 +58,7 @@ export function SushiItem({
             {dish.newMonth}月新品
           </div>
         )}
-        <div className="w-12 h-12 sm:w-16 sm:h-16 landscape:w-8 landscape:h-8 landscape:sm:w-10 landscape:sm:h-10 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1 flex items-center justify-center">
+        <div className="w-14 h-14 sm:w-20 sm:h-20 landscape:w-10 landscape:h-10 landscape:sm:w-12 landscape:sm:h-12 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1 flex items-center justify-center">
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
           ) : (
@@ -71,9 +71,16 @@ export function SushiItem({
             />
           )}
         </div>
-        <span className="text-[11px] sm:text-sm landscape:text-[9px] landscape:sm:text-[11px] font-medium text-foreground text-center leading-tight line-clamp-2">
-          {dish.name}
-        </span>
+        <div className="w-full h-[2rem] sm:h-[2.5rem] landscape:h-[1.6rem] landscape:sm:h-[2rem] flex items-center justify-center px-1">
+          <span className={cn(
+            "font-medium text-foreground text-center leading-tight block",
+            dish.name.length > 12 
+              ? "text-[9px] sm:text-[11px] landscape:text-[7px] landscape:sm:text-[9px]" 
+              : "text-[11px] sm:text-sm landscape:text-[9px] landscape:sm:text-[11px]"
+          )}>
+            {dish.name}
+          </span>
+        </div>
       </div>
     );
   }
