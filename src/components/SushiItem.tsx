@@ -113,7 +113,12 @@ export function SushiItem({
       </div>
       {/* 名牌卡片 - 位于盘子下方，利用容器的额外高度 */}
       <div className="absolute bottom-5 sm:bottom-10 landscape:bottom-3 left-1/2 -translate-x-1/2 bg-[#fcfcfc] rounded-xl shadow-md z-30 w-[100px] h-[42px] sm:w-[130px] sm:h-[54px] landscape:w-[90px] landscape:h-[40px] flex items-center justify-center px-2 border-b-4 border-gray-200">
-        <span className="text-xs sm:text-sm font-bold text-gray-800 text-center leading-tight line-clamp-2 font-serif">
+        <span className={cn(
+          "font-noto-serif font-medium text-gray-800 text-center leading-tight",
+          dish.name.length <= 5 && "text-sm sm:text-base landscape:text-xs",
+          dish.name.length > 5 && dish.name.length <= 8 && "text-xs sm:text-sm landscape:text-[10px]",
+          dish.name.length > 8 && "text-[10px] sm:text-xs landscape:text-[9px]"
+        )}>
           {dish.name}
         </span>
       </div>
