@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Dish } from "@/types/sushi";
 import { SushiItem } from "./SushiItem";
 import { cn } from "@/lib/utils";
@@ -24,24 +24,31 @@ export function ConveyorBelt({
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [hasMoved, setHasMoved] = useState(false);
 
-  // 处理传送带拖拽滚动（鼠标）
+  // 处理传送带拖拽滚动（鼠标）- 现在允许从任意位置开始拖动
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest('[draggable="true"]')) {
-      return;
-    }
+    // 只有左键才启动拖动
+    if (e.button !== 0) return;
     
     setIsDragging(true);
+    setHasMoved(false);
     setStartX(e.pageX - (containerRef.current?.offsetLeft || 0));
     setScrollLeft(containerRef.current?.scrollLeft || 0);
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isDragging || !containerRef.current) return;
-    e.preventDefault();
+    
     const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    containerRef.current.scrollLeft = scrollLeft - walk;
+    const walk = x - startX;
+    
+    // 检测是否有明显移动
+    if (Math.abs(walk) > 5) {
+      setHasMoved(true);
+      e.preventDefault();
+      containerRef.current.scrollLeft = scrollLeft - walk;
+    }
   }, [isDragging, startX, scrollLeft]);
 
   const handleMouseUp = useCallback(() => {
@@ -53,15 +60,11 @@ export function ConveyorBelt({
     onMouseLeave();
   }, [onMouseLeave]);
 
-  // 处理触摸滚动
+  // 处理触摸滚动 - 检测水平滑动
   const handleTouchStartScroll = useCallback((e: React.TouchEvent) => {
-    // 如果触摸的是菜品，让菜品的 touch handler 处理
-    if ((e.target as HTMLElement).closest('[draggable="true"]')) {
-      return;
-    }
-    
     const touch = e.touches[0];
     setIsDragging(true);
+    setHasMoved(false);
     setStartX(touch.pageX - (containerRef.current?.offsetLeft || 0));
     setScrollLeft(containerRef.current?.scrollLeft || 0);
   }, []);
@@ -71,8 +74,13 @@ export function ConveyorBelt({
     
     const touch = e.touches[0];
     const x = touch.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    containerRef.current.scrollLeft = scrollLeft - walk;
+    const walk = x - startX;
+    
+    // 如果水平移动明显，滚动传送带
+    if (Math.abs(walk) > 10) {
+      setHasMoved(true);
+      containerRef.current.scrollLeft = scrollLeft - walk;
+    }
   }, [isDragging, startX, scrollLeft]);
 
   const handleTouchEndScroll = useCallback(() => {
@@ -118,7 +126,14 @@ export function ConveyorBelt({
               key={`${dish.id}-${index}`}
               dish={dish}
               variant="belt"
-              onDragStart={onDragStart}
+              onDragStart={(e) => {
+                // 如果正在拖动传送带，阻止寿司拖拽
+                if (hasMoved) {
+                  e.preventDefault();
+                  return;
+                }
+                onDragStart(e, dish);
+              }}
               onTouchStart={onTouchStart ? onTouchStart(dish, 'pool') : undefined}
             />
           ))}
