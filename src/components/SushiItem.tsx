@@ -26,6 +26,12 @@ export function SushiItem({
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('dishId', dish.id);
     e.dataTransfer.effectAllowed = 'move';
+    
+    // 设置整个卡片作为拖拽预览
+    const target = e.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    e.dataTransfer.setDragImage(target, e.clientX - rect.left, e.clientY - rect.top);
+    
     onDragStart?.(e, dish);
   };
 
