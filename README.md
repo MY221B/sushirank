@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
+# 寿司郎夯评级 🍣
 
-## Project info
+一个用来给寿司郎菜品打分排名的 Tier List 工具。
 
-**URL**: https://lovable.dev/projects/29d47565-e25b-4903-bd0d-3823be4106fe
+## 🚀 快速开始
 
-## How can I edit this code?
+```bash
+# 安装依赖
+npm install
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/29d47565-e25b-4903-bd0d-3823be4106fe) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 启动开发服务器
 npm run dev
+
+# 构建生产版本
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+## 📸 菜品图片管理
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 图片存放位置
 
-**Use GitHub Codespaces**
+```
+src/assets/dishes/
+├── regular/          # 常规菜单
+│   ├── 三文鱼腩.webp
+│   ├── 金枪鱼.webp
+│   └── ...
+└── 2512/             # 25年12月新品 (YYMM格式)
+    ├── 店内现炸虎河豚.webp
+    └── ...
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 添加/更新菜品
 
-## What technologies are used for this project?
+1. **添加图片**：将 `.webp` 图片放入对应文件夹
+   - 常规菜品 → `src/assets/dishes/regular/`
+   - 新品 → `src/assets/dishes/YYMM/`（如 `2512` 表示25年12月）
 
-This project is built with:
+2. **图片命名**：直接用菜品中文名命名，如 `三文鱼腩.webp`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+3. **重新构建**：
+   ```bash
+   npm run build
+   ```
 
-## How can I deploy this project?
+4. **提交并部署**：
+   ```bash
+   git add .
+   git commit -m "add: 新增菜品 xxx"
+   git push
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/29d47565-e25b-4903-bd0d-3823be4106fe) and click on Share -> Publish.
+### ⚠️ 重要说明
 
-## Can I connect a custom domain to my Lovable project?
+由于性能优化，所有图片会在构建时**内联成 base64** 打包进 JS 文件：
+- ✅ 优点：手机端一次加载完成，不会有图片加载失败
+- ⚠️ 注意：**每次更新图片后必须重新 `npm run build`**
 
-Yes, you can!
+### 图片规格建议
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- 格式：WebP（推荐）或 JPG
+- 尺寸：建议 200x200 ~ 400x400 像素
+- 大小：尽量控制在 50KB 以内
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🛠️ 技术栈
+
+- Vite + React + TypeScript
+- Tailwind CSS + shadcn/ui
+- 图片内联优化（assetsInlineLimit: 150KB）
+
+## 📦 项目结构
+
+```
+src/
+├── assets/dishes/     # 菜品图片
+├── components/        # React 组件
+├── data/             # 数据配置
+├── hooks/            # 自定义 Hooks
+├── pages/            # 页面
+└── types/            # TypeScript 类型
+```
+
+## 🔗 相关链接
+
+- [Lovable Project](https://lovable.dev/projects/29d47565-e25b-4903-bd0d-3823be4106fe)

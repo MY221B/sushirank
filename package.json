@@ -8,7 +8,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dishes": "vite build && echo '\n✅ 菜品已更新！请执行 git add . && git commit && git push 部署'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
