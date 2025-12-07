@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Dish } from "@/types/sushi";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,9 @@ interface SushiItemProps {
   isDragging?: boolean;
 }
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1秒后重试
+
 export function SushiItem({ 
   dish, 
   variant = 'belt', 
@@ -20,6 +23,9 @@ export function SushiItem({
   isDragging 
 }: SushiItemProps) {
   const [imgError, setImgError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const retryCountRef = useRef(0);
+  const imgRef = useRef<HTMLImageElement>(null);
   
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('dishId', dish.id);
@@ -27,10 +33,32 @@ export function SushiItem({
     onDragStart?.(e, dish);
   };
 
-  const handleImgError = () => {
-    console.error('Image failed to load:', dish.image);
-    setImgError(true);
-  };
+  const handleImgLoad = useCallback(() => {
+    setIsLoading(false);
+    setImgError(false);
+    retryCountRef.current = 0;
+  }, []);
+
+  const handleImgError = useCallback(() => {
+    if (retryCountRef.current < MAX_RETRIES) {
+      retryCountRef.current += 1;
+      console.warn(`Image load failed, retrying (${retryCountRef.current}/${MAX_RETRIES}):`, dish.image);
+      
+      // 延迟后重试加载
+      setTimeout(() => {
+        if (imgRef.current) {
+          // 通过修改 src 来触发重新加载
+          const currentSrc = imgRef.current.src;
+          imgRef.current.src = '';
+          imgRef.current.src = currentSrc;
+        }
+      }, RETRY_DELAY * retryCountRef.current);
+    } else {
+      console.error('Image failed to load after retries:', dish.image);
+      setImgError(true);
+      setIsLoading(false);
+    }
+  }, [dish.image]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     // 阻止默认行为以启用自定义拖拽
@@ -62,13 +90,19 @@ export function SushiItem({
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
           ) : (
-            <img 
-              src={dish.image} 
-              alt={dish.name}
-              className="w-full h-full object-cover"
-              draggable={false}
-              onError={handleImgError}
-            />
+            <>
+              {isLoading && <span className="text-xl sm:text-3xl opacity-30">🍣</span>}
+              <img 
+                ref={imgRef}
+                src={dish.image} 
+                alt={dish.name}
+                className={cn("w-full h-full object-cover", isLoading && "hidden")}
+                draggable={false}
+                loading="lazy"
+                onLoad={handleImgLoad}
+                onError={handleImgError}
+              />
+            </>
           )}
         </div>
         <div className="w-full h-[2rem] sm:h-[2.5rem] landscape:h-[1.6rem] landscape:sm:h-[2rem] flex items-center justify-center px-1">
@@ -108,13 +142,19 @@ export function SushiItem({
           {imgError ? (
             <span className="text-3xl sm:text-4xl">🍣</span>
           ) : (
-            <img 
-              src={dish.image} 
-              alt={dish.name}
-              className="w-[85%] h-[85%] object-cover rounded-full"
-              draggable={false}
-              onError={handleImgError}
-            />
+            <>
+              {isLoading && <span className="text-3xl sm:text-4xl opacity-30">🍣</span>}
+              <img 
+                ref={imgRef}
+                src={dish.image} 
+                alt={dish.name}
+                className={cn("w-[85%] h-[85%] object-cover rounded-full", isLoading && "hidden")}
+                draggable={false}
+                loading="lazy"
+                onLoad={handleImgLoad}
+                onError={handleImgError}
+              />
+            </>
           )}
         </div>
       </div>
