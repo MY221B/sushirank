@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        'noto-serif': ['"Noto Serif SC"', 'serif'],
+        'cute': ['"ZCOOL KuaiLe"', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",
