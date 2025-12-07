@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Dish } from "@/types/sushi";
 import { SushiItem } from "./SushiItem";
 import { cn } from "@/lib/utils";
@@ -21,32 +21,61 @@ export function ConveyorBelt({
   onMouseLeave
 }: ConveyorBeltProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const touchTargetRef = useRef<{ dish: Dish; element: HTMLElement } | null>(null);
+  const animationRef = useRef<number | null>(null);
 
-  // 处理传送带拖拽滚动（鼠标）
+  // 使用 JavaScript 实现自动滚动动画
+  useEffect(() => {
+    const container = containerRef.current;
+    const content = contentRef.current;
+    if (!container || !content) return;
+
+    const speed = 0.5; // 像素/帧，越小越慢
+    
+    const animate = () => {
+      if (!isPaused && !isDragging && container && content) {
+        container.scrollLeft += speed;
+        
+        // 当滚动到一半时（复制的内容），重置到开头实现无缝循环
+        const halfWidth = content.scrollWidth / 2;
+        if (container.scrollLeft >= halfWidth) {
+          container.scrollLeft = 0;
+        }
+      }
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isPaused, isDragging]);
+
+  // 鼠标拖动处理
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.button !== 0) return;
+    e.preventDefault();
     
     setIsDragging(true);
-    setStartX(e.pageX - (containerRef.current?.offsetLeft || 0));
+    setStartX(e.pageX);
     setScrollLeft(containerRef.current?.scrollLeft || 0);
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
     
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = x - startX;
-    
-    if (Math.abs(walk) > 5) {
-      e.preventDefault();
-      containerRef.current.scrollLeft = scrollLeft - walk;
-    }
+    const deltaX = e.pageX - startX;
+    containerRef.current.scrollLeft = scrollLeft - deltaX;
   }, [isDragging, startX, scrollLeft]);
 
   const handleMouseUp = useCallback(() => {
@@ -58,7 +87,7 @@ export function ConveyorBelt({
     onMouseLeave();
   }, [onMouseLeave]);
 
-  // 触摸事件处理 - 在容器层面统一处理
+  // 触摸事件处理
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0];
     setStartX(touch.pageX);
@@ -104,7 +133,6 @@ export function ConveyorBelt({
     // 如果没有滚动，且触摸的是寿司，则触发寿司拖拽
     if (!isScrolling && touchTargetRef.current && onTouchStart) {
       const { dish } = touchTargetRef.current;
-      // 创建一个模拟的touch事件来触发寿司拖拽
       onTouchStart(dish, 'pool')(e);
     }
     
@@ -112,6 +140,9 @@ export function ConveyorBelt({
     setIsScrolling(false);
     touchTargetRef.current = null;
   }, [isScrolling, onTouchStart]);
+
+  // 复制菜品实现无缝滚动
+  const duplicatedDishes = [...dishes, ...dishes];
 
   return (
     <div className="relative overflow-visible">
@@ -125,7 +156,7 @@ export function ConveyorBelt({
       <div 
         ref={containerRef}
         className={cn(
-          "relative z-20 h-48 sm:h-60 landscape:h-32 landscape:sm:h-36 overflow-x-auto cursor-grab scrollbar-hide touch-pan-x",
+          "relative z-20 h-48 sm:h-60 landscape:h-32 landscape:sm:h-36 overflow-x-auto cursor-grab scrollbar-hide",
           isDragging && "cursor-grabbing"
         )}
         onMouseEnter={onMouseEnter}
@@ -138,16 +169,11 @@ export function ConveyorBelt({
         onTouchEnd={handleTouchEnd}
       >
         <div 
-          className={cn(
-            "flex h-full items-center px-2",
-            !isDragging && !isPaused && "animate-conveyor"
-          )}
-          style={{ 
-            width: 'fit-content',
-            transform: isDragging ? 'none' : undefined
-          }}
+          ref={contentRef}
+          className="flex h-full items-center px-2"
+          style={{ width: 'fit-content' }}
         >
-          {dishes.map((dish, index) => (
+          {duplicatedDishes.map((dish, index) => (
             <SushiItem
               key={`${dish.id}-${index}`}
               dish={dish}
