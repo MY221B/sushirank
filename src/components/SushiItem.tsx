@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Dish } from "@/types/sushi";
 import { cn } from "@/lib/utils";
 
@@ -11,9 +11,6 @@ interface SushiItemProps {
   isDragging?: boolean;
 }
 
-const MAX_RETRIES = 5;
-const BASE_RETRY_DELAY = 500;
-
 export function SushiItem({ 
   dish, 
   variant = 'belt', 
@@ -22,46 +19,9 @@ export function SushiItem({
   onClick,
   isDragging 
 }: SushiItemProps) {
+  // 图片已经通过 Vite 内联成 base64，几乎不会加载失败
+  // 但保留一个简单的 fallback 以防万一
   const [imgError, setImgError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isVisible, setIsVisible] = useState(false);
-  const [shouldLoad, setShouldLoad] = useState(false);
-  const retryCountRef = useRef(0);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  
-  // IntersectionObserver 实现真正的懒加载
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            // 延迟一小段时间后开始加载，避免同时触发太多请求
-            const randomDelay = Math.random() * 200;
-            setTimeout(() => setShouldLoad(true), randomDelay);
-          }
-        });
-      },
-      {
-        rootMargin: '100px', // 提前100px开始加载
-        threshold: 0.01
-      }
-    );
-
-    observer.observe(container);
-    return () => {
-      observer.disconnect();
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, []);
-
   
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('dishId', dish.id);
@@ -69,33 +29,7 @@ export function SushiItem({
     onDragStart?.(e, dish);
   };
 
-  const handleImgLoad = useCallback(() => {
-    setIsLoading(false);
-    setImgError(false);
-    retryCountRef.current = 0;
-  }, []);
-
-  const handleImgError = useCallback(() => {
-    if (retryCountRef.current < MAX_RETRIES) {
-      retryCountRef.current += 1;
-      // 指数退避：500ms, 1000ms, 2000ms, 4000ms, 8000ms
-      const delay = BASE_RETRY_DELAY * Math.pow(2, retryCountRef.current - 1);
-      
-      retryTimeoutRef.current = setTimeout(() => {
-        if (imgRef.current) {
-          const currentSrc = imgRef.current.src;
-          imgRef.current.src = '';
-          imgRef.current.src = currentSrc;
-        }
-      }, delay);
-    } else {
-      setImgError(true);
-      setIsLoading(false);
-    }
-  }, []);
-
   const handleTouchStart = (e: React.TouchEvent) => {
-    // 阻止默认行为以启用自定义拖拽
     e.stopPropagation();
     onTouchStart?.(e);
   };
@@ -103,7 +37,6 @@ export function SushiItem({
   if (variant === 'tier') {
     return (
       <div
-        ref={containerRef}
         draggable
         onDragStart={handleDragStart}
         onTouchStart={handleTouchStart}
@@ -124,21 +57,14 @@ export function SushiItem({
         <div className="w-14 h-14 sm:w-20 sm:h-20 landscape:w-10 landscape:h-10 landscape:sm:w-12 landscape:sm:h-12 rounded-md overflow-hidden bg-muted mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1 flex items-center justify-center">
           {imgError ? (
             <span className="text-xl sm:text-3xl">🍣</span>
-          ) : !shouldLoad ? (
-            <span className="text-xl sm:text-3xl opacity-30">🍣</span>
           ) : (
-            <>
-              {isLoading && <span className="text-xl sm:text-3xl opacity-30">🍣</span>}
-              <img 
-                ref={imgRef}
-                src={dish.image} 
-                alt={dish.name}
-                className={cn("w-full h-full object-cover", isLoading && "hidden")}
-                draggable={false}
-                onLoad={handleImgLoad}
-                onError={handleImgError}
-              />
-            </>
+            <img 
+              src={dish.image} 
+              alt={dish.name}
+              className="w-full h-full object-cover"
+              draggable={false}
+              onError={() => setImgError(true)}
+            />
           )}
         </div>
         <div className="w-full h-[2rem] sm:h-[2.5rem] landscape:h-[1.6rem] landscape:sm:h-[2rem] flex items-center justify-center px-1">
@@ -157,7 +83,6 @@ export function SushiItem({
 
   return (
     <div
-      ref={containerRef}
       draggable
       onDragStart={handleDragStart}
       onTouchStart={handleTouchStart}
@@ -178,25 +103,18 @@ export function SushiItem({
         <div className="w-20 h-20 sm:w-28 sm:h-28 landscape:w-14 landscape:h-14 landscape:sm:w-16 landscape:sm:h-16 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center">
           {imgError ? (
             <span className="text-3xl sm:text-4xl">🍣</span>
-          ) : !shouldLoad ? (
-            <span className="text-3xl sm:text-4xl opacity-30">🍣</span>
           ) : (
-            <>
-              {isLoading && <span className="text-3xl sm:text-4xl opacity-30">🍣</span>}
-              <img 
-                ref={imgRef}
-                src={dish.image} 
-                alt={dish.name}
-                className={cn("w-[85%] h-[85%] object-cover rounded-full", isLoading && "hidden")}
-                draggable={false}
-                onLoad={handleImgLoad}
-                onError={handleImgError}
-              />
-            </>
+            <img 
+              src={dish.image} 
+              alt={dish.name}
+              className="w-[85%] h-[85%] object-cover rounded-full"
+              draggable={false}
+              onError={() => setImgError(true)}
+            />
           )}
         </div>
       </div>
-      {/* 名牌 - 位于前挡板之上，每行6字，固定2行高度 */}
+      {/* 名牌 */}
       <div className="mt-2 sm:mt-3 landscape:mt-1 landscape:sm:mt-2 bg-background border border-border rounded px-1.5 sm:px-2 landscape:px-1 landscape:sm:px-1.5 py-1.5 sm:py-2 landscape:py-1 landscape:sm:py-1.5 shadow-sm w-[6.5rem] sm:w-[8rem] landscape:w-[5rem] landscape:sm:w-[6rem] h-[2.5rem] sm:h-[3.2rem] landscape:h-[2rem] landscape:sm:h-[2.4rem] flex items-center justify-center">
         <span className={cn(
           "font-medium text-foreground text-center leading-tight block",
