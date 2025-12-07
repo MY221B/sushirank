@@ -111,9 +111,9 @@ export function SushiItem({
           )}
         </div>
       </div>
-      {/* 名牌 - 位于前挡板之上 */}
-      <div className="mt-2 sm:mt-3 landscape:mt-1 landscape:sm:mt-2 bg-background border border-border rounded px-2.5 sm:px-4 landscape:px-1.5 landscape:sm:px-2 py-2 sm:py-3 landscape:py-1 landscape:sm:py-1.5 shadow-sm">
-        <span className="text-sm sm:text-base landscape:text-xs landscape:sm:text-sm font-medium text-foreground whitespace-nowrap">
+      {/* 名牌 - 位于前挡板之上，每行最多6字 */}
+      <div className="mt-2 sm:mt-3 landscape:mt-1 landscape:sm:mt-2 bg-background border border-border rounded px-2.5 sm:px-4 landscape:px-1.5 landscape:sm:px-2 py-2 sm:py-3 landscape:py-1 landscape:sm:py-1.5 shadow-sm max-w-[5.5rem] sm:max-w-[7rem] landscape:max-w-[4rem] landscape:sm:max-w-[5rem]">
+        <span className="text-sm sm:text-base landscape:text-xs landscape:sm:text-sm font-medium text-foreground text-center leading-tight block">
           {dish.name}
         </span>
       </div>
