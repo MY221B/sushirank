@@ -9,7 +9,6 @@ interface SushiItemProps {
   onTouchStart?: (e: React.TouchEvent) => void;
   onClick?: () => void;
   isDragging?: boolean;
-  'data-dish-id'?: string;
 }
 
 export function SushiItem({ 
@@ -18,20 +17,13 @@ export function SushiItem({
   onDragStart, 
   onTouchStart,
   onClick,
-  isDragging,
-  'data-dish-id': dataDishId
+  isDragging 
 }: SushiItemProps) {
   const [imgError, setImgError] = useState(false);
   
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('dishId', dish.id);
     e.dataTransfer.effectAllowed = 'move';
-    
-    // 设置整个卡片作为拖拽预览
-    const target = e.currentTarget as HTMLElement;
-    const rect = target.getBoundingClientRect();
-    e.dataTransfer.setDragImage(target, e.clientX - rect.left, e.clientY - rect.top);
-    
     onDragStart?.(e, dish);
   };
 
@@ -90,42 +82,34 @@ export function SushiItem({
     <div
       draggable
       onDragStart={handleDragStart}
-      data-dish-id={dataDishId || dish.id}
+      onTouchStart={handleTouchStart}
       className={cn(
-        "relative flex-shrink-0 flex flex-col items-center cursor-grab active:cursor-grabbing",
-        "w-28 sm:w-36 landscape:w-24 landscape:sm:w-28 h-full touch-none",
+        "relative flex-shrink-0 flex flex-col items-center justify-center mx-2 sm:mx-3 landscape:mx-1 landscape:sm:mx-2 cursor-grab active:cursor-grabbing",
+        "w-28 sm:w-40 landscape:w-20 landscape:sm:w-24 h-full py-2 landscape:py-1 touch-manipulation",
         isDragging && "opacity-50 scale-105"
       )}
     >
-      {/* 寿司盘子 - 固定高度匹配背景轨道 */}
-      <div className="flex-none flex items-center justify-center w-full h-32 sm:h-40 landscape:h-20 landscape:sm:h-24 pt-1">
-        {/* 新品角标 */}
-        {dish.newMonth && (
-          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
-            {dish.newMonth}月新品
-          </div>
-        )}
-        <div className="w-[90%] aspect-square max-w-[100px] sm:max-w-[120px] landscape:max-w-[70px] landscape:sm:max-w-[80px] rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center">
-          {imgError ? (
-            <span className="text-3xl sm:text-4xl landscape:text-2xl">🍣</span>
-          ) : (
-            <img 
-              src={dish.image} 
-              alt={dish.name}
-              className="w-[85%] h-[85%] object-cover rounded-full"
-              draggable={false}
-              onError={handleImgError}
-            />
-          )}
+      {/* 新品角标 */}
+      {dish.newMonth && (
+        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white text-[8px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full shadow-md z-10">
+          {dish.newMonth}月新品
         </div>
+      )}
+      <div className="w-20 h-20 sm:w-28 sm:h-28 landscape:w-14 landscape:h-14 landscape:sm:w-16 landscape:sm:h-16 rounded-full bg-plate border-2 border-plate-border shadow-lg flex items-center justify-center mb-1.5 sm:mb-2 landscape:mb-0.5 landscape:sm:mb-1">
+        {imgError ? (
+          <span className="text-3xl sm:text-4xl">🍣</span>
+        ) : (
+          <img 
+            src={dish.image} 
+            alt={dish.name}
+            className="w-[85%] h-[85%] object-cover rounded-full"
+            draggable={false}
+            onError={handleImgError}
+          />
+        )}
       </div>
-      {/* 名牌卡片 - 位于盘子下方，利用容器的额外高度 */}
-      <div className="absolute bottom-5 sm:bottom-10 landscape:bottom-3 left-1/2 -translate-x-1/2 bg-[#fcfcfc] rounded-xl shadow-md z-30 w-[100px] h-[42px] sm:w-[130px] sm:h-[54px] landscape:w-[90px] landscape:h-[40px] flex items-center justify-center px-2 border-b-4 border-gray-200">
-        <span className={cn(
-          "font-medium text-gray-800 text-center leading-tight",
-          dish.name.length <= 12 && "text-sm sm:text-base landscape:text-xs",
-          dish.name.length > 12 && "text-xs sm:text-sm landscape:text-[10px]"
-        )}>
+      <div className="bg-background border border-border rounded px-2.5 sm:px-4 landscape:px-1.5 landscape:sm:px-2 py-1 sm:py-1.5 landscape:py-0.5 landscape:sm:py-1 shadow-sm">
+        <span className="text-sm sm:text-base landscape:text-xs landscape:sm:text-sm font-medium text-foreground whitespace-nowrap">
           {dish.name}
         </span>
       </div>
