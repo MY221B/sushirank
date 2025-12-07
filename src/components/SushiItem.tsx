@@ -108,7 +108,7 @@ export function SushiItem({
           />
         )}
       </div>
-      <div className="bg-background border border-border rounded px-2.5 sm:px-4 landscape:px-1.5 landscape:sm:px-2 py-1 sm:py-1.5 landscape:py-0.5 landscape:sm:py-1 shadow-sm">
+      <div className="absolute bottom-5 sm:bottom-10 landscape:bottom-3 landscape:sm:bottom-4 bg-background border border-border rounded px-2.5 sm:px-4 landscape:px-1.5 landscape:sm:px-2 py-1 sm:py-1.5 landscape:py-0.5 landscape:sm:py-1 shadow-sm z-10">
         <span className="text-sm sm:text-base landscape:text-xs landscape:sm:text-sm font-medium text-foreground whitespace-nowrap">
           {dish.name}
         </span>
