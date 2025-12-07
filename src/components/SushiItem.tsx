@@ -9,6 +9,7 @@ interface SushiItemProps {
   onTouchStart?: (e: React.TouchEvent) => void;
   onClick?: () => void;
   isDragging?: boolean;
+  'data-dish-id'?: string;
 }
 
 export function SushiItem({ 
@@ -17,7 +18,8 @@ export function SushiItem({
   onDragStart, 
   onTouchStart,
   onClick,
-  isDragging 
+  isDragging,
+  'data-dish-id': dataDishId
 }: SushiItemProps) {
   const [imgError, setImgError] = useState(false);
   
@@ -82,10 +84,10 @@ export function SushiItem({
     <div
       draggable
       onDragStart={handleDragStart}
-      onTouchStart={handleTouchStart}
+      data-dish-id={dataDishId || dish.id}
       className={cn(
         "relative flex-shrink-0 flex flex-col items-center cursor-grab active:cursor-grabbing",
-        "w-28 sm:w-36 landscape:w-24 landscape:sm:w-28 h-full touch-manipulation",
+        "w-28 sm:w-36 landscape:w-24 landscape:sm:w-28 h-full touch-none",
         isDragging && "opacity-50 scale-105"
       )}
     >
