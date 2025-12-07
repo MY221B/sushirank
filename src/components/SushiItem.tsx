@@ -46,7 +46,7 @@ export function SushiItem({
         onTouchStart={handleTouchStart}
         onClick={onClick}
         className={cn(
-          "relative flex flex-col items-center p-1 sm:p-1.5 landscape:p-0.5 landscape:sm:p-1 bg-card border border-border rounded-lg cursor-pointer",
+          "relative flex flex-col items-center px-0.5 py-1 sm:px-1 sm:py-1.5 landscape:px-0.5 landscape:py-0.5 landscape:sm:px-0.5 landscape:sm:py-1 bg-card border border-border rounded-lg cursor-pointer",
           "hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95",
           "w-[5.5rem] sm:w-[7rem] landscape:w-[4.5rem] landscape:sm:w-[5.5rem] animate-scale-in touch-manipulation",
           isDragging && "opacity-50 scale-105"
