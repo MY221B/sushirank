@@ -159,9 +159,9 @@ const Index = () => {
         </div>
 
         {/* Search and Control Buttons */}
-        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 landscape:gap-1 landscape:sm:gap-2 mb-4 landscape:mb-1 landscape:sm:mb-2">
+        <div className="flex flex-row justify-between items-center gap-2 sm:gap-3 landscape:gap-1 landscape:sm:gap-2 mb-4 landscape:mb-1 landscape:sm:mb-2">
           {/* Search Input */}
-          <div className="relative flex-1 max-w-xs">
+          <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
