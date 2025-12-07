@@ -63,8 +63,15 @@ export function ConveyorBelt({
   // 鼠标拖动处理
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.button !== 0) return;
-    e.preventDefault();
     
+    // 检查是否点击的是寿司项 - 如果是，不阻止默认行为让原生拖拽生效
+    const target = e.target as HTMLElement;
+    const sushiElement = target.closest('[data-dish-id]');
+    if (sushiElement) {
+      return; // 让原生拖拽处理
+    }
+    
+    e.preventDefault();
     setIsDragging(true);
     setStartX(e.pageX);
     setScrollLeft(containerRef.current?.scrollLeft || 0);
